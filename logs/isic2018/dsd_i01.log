@@ -1,0 +1,4725 @@
+2024-03-26 17:32:57,633 - INFO) helper_funcs.py:151 => 
+>>>>>>>>>>>>>>>>>>>> Config >>>>>>>>>>>>>>>>>>>>
+{
+  "run": {
+    "device": "gpu",
+    "save_imgs": "saved_imgs",
+    "writer_dir": "/home/manisha/Desktop/runs/isic2018",
+    "continue_training": false
+  },
+  "model": {
+    "save_dir": "/home/manisha/Desktop/models/isic2018",
+    "name": "dsd_i01",
+    "class": "DermoSegDiff",
+    "params": {
+      "dim_x": 128,
+      "dim_g": 64,
+      "channels_x": 1,
+      "channels_g": 3,
+      "out_dim": 1,
+      "dim_x_mults": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "dim_g_mults": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "resnet_block_groups": 8
+    }
+  },
+  "diffusion": {
+    "schedule": {
+      "timesteps": 250,
+      "mode": "linear",
+      "beta_start": 0.0004,
+      "beta_end": 0.08
+    }
+  },
+  "dataset": {
+    "input_size": 128,
+    "name": "isic2018",
+    "class_name": "ISIC2018DatasetFast",
+    "data_dir": "/home/manisha/Desktop/isic-challenge-2018",
+    "number_classes": 2,
+    "img_channels": 3,
+    "msk_channels": 1,
+    "data_scale": "full"
+  },
+  "data_loader": {
+    "train": {
+      "batch_size": 32,
+      "shuffle": true,
+      "pin_memory": true
+    },
+    "validation": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": true
+    },
+    "test": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": false
+    }
+  },
+  "training": {
+    "epochs": 500,
+    "intial_weights": {
+      "use": false,
+      "file_path": "/home/manisha/Desktop/isic-challenge-2018"
+    },
+    "loss": {
+      "l2": {
+        "cofficient": 1.0
+      }
+    },
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+        "lr": 0.0001,
+        "betas": [
+          0.7,
+          0.99
+        ],
+        "weight_decay": 0.0
+      }
+    },
+    "scheduler": {
+      "factor": 0.5,
+      "patience": 5
+    },
+    "ema": {
+      "use": true,
+      "params": {
+        "beta": 0.9999,
+        "update_after_step": 500,
+        "update_every": 1,
+        "inv_gamma": 1.0,
+        "power": 0.9
+      }
+    },
+    "loss_name": "l2"
+  },
+  "testing": {
+    "ensemble": 5,
+    "model_weigths": {
+      "overload": false,
+      "file_path": "isic-challenge-2018"
+    },
+    "result_imgs": {
+      "save": false,
+      "dir": "path/to/folder"
+    }
+  },
+  "augmentation": {
+    "p": 0.5,
+    "levels": {
+      "pixel": {
+        "p": 1.0,
+        "transforms": {
+          "CLAHE": {
+            "clip_limit": 4,
+            "tile_grid_size": [
+              3,
+              3
+            ],
+            "p": 0.05
+          },
+          "Emboss": {
+            "p": 0.05
+          },
+          "GaussNoise": {
+            "var_limit": [
+              10,
+              200
+            ],
+            "p": 0.05
+          },
+          "HueSaturationValue": {
+            "hue_shift_limit": 7,
+            "sat_shift_limit": 30,
+            "val_shift_limit": 20,
+            "p": 0.05
+          },
+          "MultiplicativeNoise": {
+            "multiplier": [
+              0.8,
+              1.25
+            ],
+            "elementwise": true,
+            "p": 0.05
+          },
+          "RGBShift": {
+            "p": 0.05
+          },
+          "RandomBrightnessContrast": {
+            "p": 0.05
+          },
+          "RandomGamma": {
+            "gamma_limit": [
+              70,
+              130
+            ],
+            "p": 0.05
+          },
+          "RandomToneCurve": {
+            "scale": 0.15,
+            "p": 0.05
+          },
+          "Sharpen": {
+            "p": 0.05
+          },
+          "Spatter": {
+            "mean": 0,
+            "std": 60,
+            "gauss_sigma": 2,
+            "cutout_threshold": 5,
+            "intensity": -3,
+            "p": 0.05
+          },
+          "UnsharpMask": {
+            "p": 0.05
+          }
+        }
+      },
+      "spacial": {
+        "p": 1,
+        "transforms": {
+          "Affine": {
+            "p": 0.05
+          },
+          "CoarseDropout": {
+            "min_holes": 1,
+            "max_holes": 5,
+            "min_height": 4,
+            "max_height": 16,
+            "min_width": 4,
+            "max_width": 16,
+            "fill_value": [
+              10,
+              20,
+              60
+            ],
+            "p": 0.05
+          },
+          "ElasticTransform": {
+            "alpha": 0.5,
+            "sigma": 1.3,
+            "alpha_affine": 20,
+            "border_mode": 2,
+            "p": 0.05
+          },
+          "HorizontalFlip": {
+            "p": 0.05
+          },
+          "VerticalFlip": {
+            "p": 0.05
+          },
+          "Flip": {
+            "p": 0.05
+          },
+          "GridDistortion": {
+            "border_mode": 4,
+            "p": 0.05
+          },
+          "PiecewiseAffine": {
+            "p": 0.05
+          },
+          "PixelDropout": {
+            "p": 0.05
+          },
+          "RandomRotate90": {
+            "p": 0.05
+          },
+          "Rotate": {
+            "border_mode": 4,
+            "p": 0.05
+          }
+        }
+      }
+    }
+  }
+}
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2024-03-26 17:33:40,927 - INFO) helper_funcs.py:151 => 
+>>>>>>>>>>>>>>>>>>>> Config >>>>>>>>>>>>>>>>>>>>
+{
+  "run": {
+    "device": "gpu",
+    "save_imgs": "saved_imgs",
+    "writer_dir": "/home/manisha/Desktop/runs/isic2018",
+    "continue_training": false
+  },
+  "model": {
+    "save_dir": "/home/manisha/Desktop/models/isic2018",
+    "name": "dsd_i01",
+    "class": "DermoSegDiff",
+    "params": {
+      "dim_x": 128,
+      "dim_g": 64,
+      "channels_x": 1,
+      "channels_g": 3,
+      "out_dim": 1,
+      "dim_x_mults": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "dim_g_mults": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "resnet_block_groups": 8
+    }
+  },
+  "diffusion": {
+    "schedule": {
+      "timesteps": 250,
+      "mode": "linear",
+      "beta_start": 0.0004,
+      "beta_end": 0.08
+    }
+  },
+  "dataset": {
+    "input_size": 128,
+    "name": "isic2018",
+    "class_name": "ISIC2018DatasetFast",
+    "data_dir": "/home/manisha/Desktop/isic-challenge-2018",
+    "number_classes": 2,
+    "img_channels": 3,
+    "msk_channels": 1,
+    "data_scale": "full"
+  },
+  "data_loader": {
+    "train": {
+      "batch_size": 32,
+      "shuffle": true,
+      "pin_memory": true
+    },
+    "validation": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": true
+    },
+    "test": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": false
+    }
+  },
+  "training": {
+    "epochs": 500,
+    "intial_weights": {
+      "use": false,
+      "file_path": "/home/manisha/Desktop/isic-challenge-2018"
+    },
+    "loss": {
+      "l2": {
+        "cofficient": 1.0
+      }
+    },
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+        "lr": 0.0001,
+        "betas": [
+          0.7,
+          0.99
+        ],
+        "weight_decay": 0.0
+      }
+    },
+    "scheduler": {
+      "factor": 0.5,
+      "patience": 5
+    },
+    "ema": {
+      "use": true,
+      "params": {
+        "beta": 0.9999,
+        "update_after_step": 500,
+        "update_every": 1,
+        "inv_gamma": 1.0,
+        "power": 0.9
+      }
+    },
+    "loss_name": "l2"
+  },
+  "testing": {
+    "ensemble": 5,
+    "model_weigths": {
+      "overload": false,
+      "file_path": "isic-challenge-2018"
+    },
+    "result_imgs": {
+      "save": false,
+      "dir": "path/to/folder"
+    }
+  },
+  "augmentation": {
+    "p": 0.5,
+    "levels": {
+      "pixel": {
+        "p": 1.0,
+        "transforms": {
+          "CLAHE": {
+            "clip_limit": 4,
+            "tile_grid_size": [
+              3,
+              3
+            ],
+            "p": 0.05
+          },
+          "Emboss": {
+            "p": 0.05
+          },
+          "GaussNoise": {
+            "var_limit": [
+              10,
+              200
+            ],
+            "p": 0.05
+          },
+          "HueSaturationValue": {
+            "hue_shift_limit": 7,
+            "sat_shift_limit": 30,
+            "val_shift_limit": 20,
+            "p": 0.05
+          },
+          "MultiplicativeNoise": {
+            "multiplier": [
+              0.8,
+              1.25
+            ],
+            "elementwise": true,
+            "p": 0.05
+          },
+          "RGBShift": {
+            "p": 0.05
+          },
+          "RandomBrightnessContrast": {
+            "p": 0.05
+          },
+          "RandomGamma": {
+            "gamma_limit": [
+              70,
+              130
+            ],
+            "p": 0.05
+          },
+          "RandomToneCurve": {
+            "scale": 0.15,
+            "p": 0.05
+          },
+          "Sharpen": {
+            "p": 0.05
+          },
+          "Spatter": {
+            "mean": 0,
+            "std": 60,
+            "gauss_sigma": 2,
+            "cutout_threshold": 5,
+            "intensity": -3,
+            "p": 0.05
+          },
+          "UnsharpMask": {
+            "p": 0.05
+          }
+        }
+      },
+      "spacial": {
+        "p": 1,
+        "transforms": {
+          "Affine": {
+            "p": 0.05
+          },
+          "CoarseDropout": {
+            "min_holes": 1,
+            "max_holes": 5,
+            "min_height": 4,
+            "max_height": 16,
+            "min_width": 4,
+            "max_width": 16,
+            "fill_value": [
+              10,
+              20,
+              60
+            ],
+            "p": 0.05
+          },
+          "ElasticTransform": {
+            "alpha": 0.5,
+            "sigma": 1.3,
+            "alpha_affine": 20,
+            "border_mode": 2,
+            "p": 0.05
+          },
+          "HorizontalFlip": {
+            "p": 0.05
+          },
+          "VerticalFlip": {
+            "p": 0.05
+          },
+          "Flip": {
+            "p": 0.05
+          },
+          "GridDistortion": {
+            "border_mode": 4,
+            "p": 0.05
+          },
+          "PiecewiseAffine": {
+            "p": 0.05
+          },
+          "PixelDropout": {
+            "p": 0.05
+          },
+          "RandomRotate90": {
+            "p": 0.05
+          },
+          "Rotate": {
+            "border_mode": 4,
+            "p": 0.05
+          }
+        }
+      }
+    }
+  }
+}
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2024-03-26 17:48:52,353 - INFO) helper_funcs.py:151 => 
+>>>>>>>>>>>>>>>>>>>> Config >>>>>>>>>>>>>>>>>>>>
+{
+  "run": {
+    "device": "gpu",
+    "save_imgs": "saved_imgs",
+    "writer_dir": "/home/manisha/Desktop/runs/isic2018",
+    "continue_training": false
+  },
+  "model": {
+    "save_dir": "/home/manisha/Desktop/models/isic2018",
+    "name": "dsd_i01",
+    "class": "DermoSegDiff",
+    "params": {
+      "dim_x": 128,
+      "dim_g": 64,
+      "channels_x": 1,
+      "channels_g": 3,
+      "out_dim": 1,
+      "dim_x_mults": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "dim_g_mults": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "resnet_block_groups": 8
+    }
+  },
+  "diffusion": {
+    "schedule": {
+      "timesteps": 250,
+      "mode": "linear",
+      "beta_start": 0.0004,
+      "beta_end": 0.08
+    }
+  },
+  "dataset": {
+    "input_size": 128,
+    "name": "isic2018",
+    "class_name": "ISIC2018DatasetFast",
+    "data_dir": "/home/manisha/Desktop/isic-challenge-2018",
+    "number_classes": 2,
+    "img_channels": 3,
+    "msk_channels": 1,
+    "data_scale": "full"
+  },
+  "data_loader": {
+    "train": {
+      "batch_size": 32,
+      "shuffle": true,
+      "pin_memory": true
+    },
+    "validation": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": true
+    },
+    "test": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": false
+    }
+  },
+  "training": {
+    "epochs": 500,
+    "intial_weights": {
+      "use": false,
+      "file_path": "/home/manisha/Desktop/isic-challenge-2018"
+    },
+    "loss": {
+      "l2": {
+        "cofficient": 1.0
+      }
+    },
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+        "lr": 0.0001,
+        "betas": [
+          0.7,
+          0.99
+        ],
+        "weight_decay": 0.0
+      }
+    },
+    "scheduler": {
+      "factor": 0.5,
+      "patience": 5
+    },
+    "ema": {
+      "use": true,
+      "params": {
+        "beta": 0.9999,
+        "update_after_step": 500,
+        "update_every": 1,
+        "inv_gamma": 1.0,
+        "power": 0.9
+      }
+    },
+    "loss_name": "l2"
+  },
+  "testing": {
+    "ensemble": 5,
+    "model_weigths": {
+      "overload": false,
+      "file_path": "isic-challenge-2018"
+    },
+    "result_imgs": {
+      "save": false,
+      "dir": "path/to/folder"
+    }
+  },
+  "augmentation": {
+    "p": 0.5,
+    "levels": {
+      "pixel": {
+        "p": 1.0,
+        "transforms": {
+          "CLAHE": {
+            "clip_limit": 4,
+            "tile_grid_size": [
+              3,
+              3
+            ],
+            "p": 0.05
+          },
+          "Emboss": {
+            "p": 0.05
+          },
+          "GaussNoise": {
+            "var_limit": [
+              10,
+              200
+            ],
+            "p": 0.05
+          },
+          "HueSaturationValue": {
+            "hue_shift_limit": 7,
+            "sat_shift_limit": 30,
+            "val_shift_limit": 20,
+            "p": 0.05
+          },
+          "MultiplicativeNoise": {
+            "multiplier": [
+              0.8,
+              1.25
+            ],
+            "elementwise": true,
+            "p": 0.05
+          },
+          "RGBShift": {
+            "p": 0.05
+          },
+          "RandomBrightnessContrast": {
+            "p": 0.05
+          },
+          "RandomGamma": {
+            "gamma_limit": [
+              70,
+              130
+            ],
+            "p": 0.05
+          },
+          "RandomToneCurve": {
+            "scale": 0.15,
+            "p": 0.05
+          },
+          "Sharpen": {
+            "p": 0.05
+          },
+          "Spatter": {
+            "mean": 0,
+            "std": 60,
+            "gauss_sigma": 2,
+            "cutout_threshold": 5,
+            "intensity": -3,
+            "p": 0.05
+          },
+          "UnsharpMask": {
+            "p": 0.05
+          }
+        }
+      },
+      "spacial": {
+        "p": 1,
+        "transforms": {
+          "Affine": {
+            "p": 0.05
+          },
+          "CoarseDropout": {
+            "min_holes": 1,
+            "max_holes": 5,
+            "min_height": 4,
+            "max_height": 16,
+            "min_width": 4,
+            "max_width": 16,
+            "fill_value": [
+              10,
+              20,
+              60
+            ],
+            "p": 0.05
+          },
+          "ElasticTransform": {
+            "alpha": 0.5,
+            "sigma": 1.3,
+            "alpha_affine": 20,
+            "border_mode": 2,
+            "p": 0.05
+          },
+          "HorizontalFlip": {
+            "p": 0.05
+          },
+          "VerticalFlip": {
+            "p": 0.05
+          },
+          "Flip": {
+            "p": 0.05
+          },
+          "GridDistortion": {
+            "border_mode": 4,
+            "p": 0.05
+          },
+          "PiecewiseAffine": {
+            "p": 0.05
+          },
+          "PixelDropout": {
+            "p": 0.05
+          },
+          "RandomRotate90": {
+            "p": 0.05
+          },
+          "Rotate": {
+            "border_mode": 4,
+            "p": 0.05
+          }
+        }
+      }
+    }
+  }
+}
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2024-03-26 17:57:10,143 - INFO) helper_funcs.py:151 => 
+>>>>>>>>>>>>>>>>>>>> Config >>>>>>>>>>>>>>>>>>>>
+{
+  "run": {
+    "device": "gpu:0",
+    "save_imgs": "saved_imgs",
+    "writer_dir": "/home/manisha/Desktop/runs/isic2018",
+    "continue_training": false
+  },
+  "model": {
+    "save_dir": "/home/manisha/Desktop/models/isic2018",
+    "name": "dsd_i01",
+    "class": "DermoSegDiff",
+    "params": {
+      "dim_x": 128,
+      "dim_g": 64,
+      "channels_x": 1,
+      "channels_g": 3,
+      "out_dim": 1,
+      "dim_x_mults": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "dim_g_mults": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "resnet_block_groups": 8
+    }
+  },
+  "diffusion": {
+    "schedule": {
+      "timesteps": 250,
+      "mode": "linear",
+      "beta_start": 0.0004,
+      "beta_end": 0.08
+    }
+  },
+  "dataset": {
+    "input_size": 128,
+    "name": "isic2018",
+    "class_name": "ISIC2018DatasetFast",
+    "data_dir": "/home/manisha/Desktop/isic-challenge-2018",
+    "number_classes": 2,
+    "img_channels": 3,
+    "msk_channels": 1,
+    "data_scale": "full"
+  },
+  "data_loader": {
+    "train": {
+      "batch_size": 32,
+      "shuffle": true,
+      "pin_memory": true
+    },
+    "validation": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": true
+    },
+    "test": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": false
+    }
+  },
+  "training": {
+    "epochs": 500,
+    "intial_weights": {
+      "use": false,
+      "file_path": "/home/manisha/Desktop/isic-challenge-2018"
+    },
+    "loss": {
+      "l2": {
+        "cofficient": 1.0
+      }
+    },
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+        "lr": 0.0001,
+        "betas": [
+          0.7,
+          0.99
+        ],
+        "weight_decay": 0.0
+      }
+    },
+    "scheduler": {
+      "factor": 0.5,
+      "patience": 5
+    },
+    "ema": {
+      "use": true,
+      "params": {
+        "beta": 0.9999,
+        "update_after_step": 500,
+        "update_every": 1,
+        "inv_gamma": 1.0,
+        "power": 0.9
+      }
+    },
+    "loss_name": "l2"
+  },
+  "testing": {
+    "ensemble": 5,
+    "model_weigths": {
+      "overload": false,
+      "file_path": "isic-challenge-2018"
+    },
+    "result_imgs": {
+      "save": false,
+      "dir": "path/to/folder"
+    }
+  },
+  "augmentation": {
+    "p": 0.5,
+    "levels": {
+      "pixel": {
+        "p": 1.0,
+        "transforms": {
+          "CLAHE": {
+            "clip_limit": 4,
+            "tile_grid_size": [
+              3,
+              3
+            ],
+            "p": 0.05
+          },
+          "Emboss": {
+            "p": 0.05
+          },
+          "GaussNoise": {
+            "var_limit": [
+              10,
+              200
+            ],
+            "p": 0.05
+          },
+          "HueSaturationValue": {
+            "hue_shift_limit": 7,
+            "sat_shift_limit": 30,
+            "val_shift_limit": 20,
+            "p": 0.05
+          },
+          "MultiplicativeNoise": {
+            "multiplier": [
+              0.8,
+              1.25
+            ],
+            "elementwise": true,
+            "p": 0.05
+          },
+          "RGBShift": {
+            "p": 0.05
+          },
+          "RandomBrightnessContrast": {
+            "p": 0.05
+          },
+          "RandomGamma": {
+            "gamma_limit": [
+              70,
+              130
+            ],
+            "p": 0.05
+          },
+          "RandomToneCurve": {
+            "scale": 0.15,
+            "p": 0.05
+          },
+          "Sharpen": {
+            "p": 0.05
+          },
+          "Spatter": {
+            "mean": 0,
+            "std": 60,
+            "gauss_sigma": 2,
+            "cutout_threshold": 5,
+            "intensity": -3,
+            "p": 0.05
+          },
+          "UnsharpMask": {
+            "p": 0.05
+          }
+        }
+      },
+      "spacial": {
+        "p": 1,
+        "transforms": {
+          "Affine": {
+            "p": 0.05
+          },
+          "CoarseDropout": {
+            "min_holes": 1,
+            "max_holes": 5,
+            "min_height": 4,
+            "max_height": 16,
+            "min_width": 4,
+            "max_width": 16,
+            "fill_value": [
+              10,
+              20,
+              60
+            ],
+            "p": 0.05
+          },
+          "ElasticTransform": {
+            "alpha": 0.5,
+            "sigma": 1.3,
+            "alpha_affine": 20,
+            "border_mode": 2,
+            "p": 0.05
+          },
+          "HorizontalFlip": {
+            "p": 0.05
+          },
+          "VerticalFlip": {
+            "p": 0.05
+          },
+          "Flip": {
+            "p": 0.05
+          },
+          "GridDistortion": {
+            "border_mode": 4,
+            "p": 0.05
+          },
+          "PiecewiseAffine": {
+            "p": 0.05
+          },
+          "PixelDropout": {
+            "p": 0.05
+          },
+          "RandomRotate90": {
+            "p": 0.05
+          },
+          "Rotate": {
+            "border_mode": 4,
+            "p": 0.05
+          }
+        }
+      }
+    }
+  }
+}
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2024-03-26 17:57:51,974 - INFO) helper_funcs.py:151 => 
+>>>>>>>>>>>>>>>>>>>> Config >>>>>>>>>>>>>>>>>>>>
+{
+  "run": {
+    "device": "gpu:0",
+    "save_imgs": "saved_imgs",
+    "writer_dir": "/home/manisha/Desktop/runs/isic2018",
+    "continue_training": false
+  },
+  "model": {
+    "save_dir": "/home/manisha/Desktop/models/isic2018",
+    "name": "dsd_i01",
+    "class": "DermoSegDiff",
+    "params": {
+      "dim_x": 128,
+      "dim_g": 64,
+      "channels_x": 1,
+      "channels_g": 3,
+      "out_dim": 1,
+      "dim_x_mults": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "dim_g_mults": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "resnet_block_groups": 8
+    }
+  },
+  "diffusion": {
+    "schedule": {
+      "timesteps": 250,
+      "mode": "linear",
+      "beta_start": 0.0004,
+      "beta_end": 0.08
+    }
+  },
+  "dataset": {
+    "input_size": 128,
+    "name": "isic2018",
+    "class_name": "ISIC2018DatasetFast",
+    "data_dir": "/home/manisha/Desktop/isic-challenge-2018",
+    "number_classes": 2,
+    "img_channels": 3,
+    "msk_channels": 1,
+    "data_scale": "full"
+  },
+  "data_loader": {
+    "train": {
+      "batch_size": 32,
+      "shuffle": true,
+      "pin_memory": true
+    },
+    "validation": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": true
+    },
+    "test": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": false
+    }
+  },
+  "training": {
+    "epochs": 500,
+    "intial_weights": {
+      "use": false,
+      "file_path": "/home/manisha/Desktop/isic-challenge-2018"
+    },
+    "loss": {
+      "l2": {
+        "cofficient": 1.0
+      }
+    },
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+        "lr": 0.0001,
+        "betas": [
+          0.7,
+          0.99
+        ],
+        "weight_decay": 0.0
+      }
+    },
+    "scheduler": {
+      "factor": 0.5,
+      "patience": 5
+    },
+    "ema": {
+      "use": true,
+      "params": {
+        "beta": 0.9999,
+        "update_after_step": 500,
+        "update_every": 1,
+        "inv_gamma": 1.0,
+        "power": 0.9
+      }
+    },
+    "loss_name": "l2"
+  },
+  "testing": {
+    "ensemble": 5,
+    "model_weigths": {
+      "overload": false,
+      "file_path": "isic-challenge-2018"
+    },
+    "result_imgs": {
+      "save": false,
+      "dir": "path/to/folder"
+    }
+  },
+  "augmentation": {
+    "p": 0.5,
+    "levels": {
+      "pixel": {
+        "p": 1.0,
+        "transforms": {
+          "CLAHE": {
+            "clip_limit": 4,
+            "tile_grid_size": [
+              3,
+              3
+            ],
+            "p": 0.05
+          },
+          "Emboss": {
+            "p": 0.05
+          },
+          "GaussNoise": {
+            "var_limit": [
+              10,
+              200
+            ],
+            "p": 0.05
+          },
+          "HueSaturationValue": {
+            "hue_shift_limit": 7,
+            "sat_shift_limit": 30,
+            "val_shift_limit": 20,
+            "p": 0.05
+          },
+          "MultiplicativeNoise": {
+            "multiplier": [
+              0.8,
+              1.25
+            ],
+            "elementwise": true,
+            "p": 0.05
+          },
+          "RGBShift": {
+            "p": 0.05
+          },
+          "RandomBrightnessContrast": {
+            "p": 0.05
+          },
+          "RandomGamma": {
+            "gamma_limit": [
+              70,
+              130
+            ],
+            "p": 0.05
+          },
+          "RandomToneCurve": {
+            "scale": 0.15,
+            "p": 0.05
+          },
+          "Sharpen": {
+            "p": 0.05
+          },
+          "Spatter": {
+            "mean": 0,
+            "std": 60,
+            "gauss_sigma": 2,
+            "cutout_threshold": 5,
+            "intensity": -3,
+            "p": 0.05
+          },
+          "UnsharpMask": {
+            "p": 0.05
+          }
+        }
+      },
+      "spacial": {
+        "p": 1,
+        "transforms": {
+          "Affine": {
+            "p": 0.05
+          },
+          "CoarseDropout": {
+            "min_holes": 1,
+            "max_holes": 5,
+            "min_height": 4,
+            "max_height": 16,
+            "min_width": 4,
+            "max_width": 16,
+            "fill_value": [
+              10,
+              20,
+              60
+            ],
+            "p": 0.05
+          },
+          "ElasticTransform": {
+            "alpha": 0.5,
+            "sigma": 1.3,
+            "alpha_affine": 20,
+            "border_mode": 2,
+            "p": 0.05
+          },
+          "HorizontalFlip": {
+            "p": 0.05
+          },
+          "VerticalFlip": {
+            "p": 0.05
+          },
+          "Flip": {
+            "p": 0.05
+          },
+          "GridDistortion": {
+            "border_mode": 4,
+            "p": 0.05
+          },
+          "PiecewiseAffine": {
+            "p": 0.05
+          },
+          "PixelDropout": {
+            "p": 0.05
+          },
+          "RandomRotate90": {
+            "p": 0.05
+          },
+          "Rotate": {
+            "border_mode": 4,
+            "p": 0.05
+          }
+        }
+      }
+    }
+  }
+}
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2024-03-26 17:58:22,582 - INFO) helper_funcs.py:151 => 
+>>>>>>>>>>>>>>>>>>>> Config >>>>>>>>>>>>>>>>>>>>
+{
+  "run": {
+    "device": "gpu:0",
+    "save_imgs": "saved_imgs",
+    "writer_dir": "/home/manisha/Desktop/runs/isic2018",
+    "continue_training": false
+  },
+  "model": {
+    "save_dir": "/home/manisha/Desktop/models/isic2018",
+    "name": "dsd_i01",
+    "class": "DermoSegDiff",
+    "params": {
+      "dim_x": 128,
+      "dim_g": 64,
+      "channels_x": 1,
+      "channels_g": 3,
+      "out_dim": 1,
+      "dim_x_mults": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "dim_g_mults": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "resnet_block_groups": 8
+    }
+  },
+  "diffusion": {
+    "schedule": {
+      "timesteps": 250,
+      "mode": "linear",
+      "beta_start": 0.0004,
+      "beta_end": 0.08
+    }
+  },
+  "dataset": {
+    "input_size": 128,
+    "name": "isic2018",
+    "class_name": "ISIC2018DatasetFast",
+    "data_dir": "/home/manisha/Desktop/isic-challenge-2018",
+    "number_classes": 2,
+    "img_channels": 3,
+    "msk_channels": 1,
+    "data_scale": "full"
+  },
+  "data_loader": {
+    "train": {
+      "batch_size": 32,
+      "shuffle": true,
+      "pin_memory": true
+    },
+    "validation": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": true
+    },
+    "test": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": false
+    }
+  },
+  "training": {
+    "epochs": 500,
+    "intial_weights": {
+      "use": false,
+      "file_path": "/home/manisha/Desktop/isic-challenge-2018"
+    },
+    "loss": {
+      "l2": {
+        "cofficient": 1.0
+      }
+    },
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+        "lr": 0.0001,
+        "betas": [
+          0.7,
+          0.99
+        ],
+        "weight_decay": 0.0
+      }
+    },
+    "scheduler": {
+      "factor": 0.5,
+      "patience": 5
+    },
+    "ema": {
+      "use": true,
+      "params": {
+        "beta": 0.9999,
+        "update_after_step": 500,
+        "update_every": 1,
+        "inv_gamma": 1.0,
+        "power": 0.9
+      }
+    },
+    "loss_name": "l2"
+  },
+  "testing": {
+    "ensemble": 5,
+    "model_weigths": {
+      "overload": false,
+      "file_path": "isic-challenge-2018"
+    },
+    "result_imgs": {
+      "save": false,
+      "dir": "path/to/folder"
+    }
+  },
+  "augmentation": {
+    "p": 0.5,
+    "levels": {
+      "pixel": {
+        "p": 1.0,
+        "transforms": {
+          "CLAHE": {
+            "clip_limit": 4,
+            "tile_grid_size": [
+              3,
+              3
+            ],
+            "p": 0.05
+          },
+          "Emboss": {
+            "p": 0.05
+          },
+          "GaussNoise": {
+            "var_limit": [
+              10,
+              200
+            ],
+            "p": 0.05
+          },
+          "HueSaturationValue": {
+            "hue_shift_limit": 7,
+            "sat_shift_limit": 30,
+            "val_shift_limit": 20,
+            "p": 0.05
+          },
+          "MultiplicativeNoise": {
+            "multiplier": [
+              0.8,
+              1.25
+            ],
+            "elementwise": true,
+            "p": 0.05
+          },
+          "RGBShift": {
+            "p": 0.05
+          },
+          "RandomBrightnessContrast": {
+            "p": 0.05
+          },
+          "RandomGamma": {
+            "gamma_limit": [
+              70,
+              130
+            ],
+            "p": 0.05
+          },
+          "RandomToneCurve": {
+            "scale": 0.15,
+            "p": 0.05
+          },
+          "Sharpen": {
+            "p": 0.05
+          },
+          "Spatter": {
+            "mean": 0,
+            "std": 60,
+            "gauss_sigma": 2,
+            "cutout_threshold": 5,
+            "intensity": -3,
+            "p": 0.05
+          },
+          "UnsharpMask": {
+            "p": 0.05
+          }
+        }
+      },
+      "spacial": {
+        "p": 1,
+        "transforms": {
+          "Affine": {
+            "p": 0.05
+          },
+          "CoarseDropout": {
+            "min_holes": 1,
+            "max_holes": 5,
+            "min_height": 4,
+            "max_height": 16,
+            "min_width": 4,
+            "max_width": 16,
+            "fill_value": [
+              10,
+              20,
+              60
+            ],
+            "p": 0.05
+          },
+          "ElasticTransform": {
+            "alpha": 0.5,
+            "sigma": 1.3,
+            "alpha_affine": 20,
+            "border_mode": 2,
+            "p": 0.05
+          },
+          "HorizontalFlip": {
+            "p": 0.05
+          },
+          "VerticalFlip": {
+            "p": 0.05
+          },
+          "Flip": {
+            "p": 0.05
+          },
+          "GridDistortion": {
+            "border_mode": 4,
+            "p": 0.05
+          },
+          "PiecewiseAffine": {
+            "p": 0.05
+          },
+          "PixelDropout": {
+            "p": 0.05
+          },
+          "RandomRotate90": {
+            "p": 0.05
+          },
+          "Rotate": {
+            "border_mode": 4,
+            "p": 0.05
+          }
+        }
+      }
+    }
+  }
+}
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2024-03-26 18:00:14,185 - INFO) helper_funcs.py:151 => 
+>>>>>>>>>>>>>>>>>>>> Config >>>>>>>>>>>>>>>>>>>>
+{
+  "run": {
+    "device": "gpu:0",
+    "save_imgs": "saved_imgs",
+    "writer_dir": "/home/manisha/Desktop/runs/isic2018",
+    "continue_training": false
+  },
+  "model": {
+    "save_dir": "/home/manisha/Desktop/models/isic2018",
+    "name": "dsd_i01",
+    "class": "DermoSegDiff",
+    "params": {
+      "dim_x": 128,
+      "dim_g": 64,
+      "channels_x": 1,
+      "channels_g": 3,
+      "out_dim": 1,
+      "dim_x_mults": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "dim_g_mults": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "resnet_block_groups": 8
+    }
+  },
+  "diffusion": {
+    "schedule": {
+      "timesteps": 250,
+      "mode": "linear",
+      "beta_start": 0.0004,
+      "beta_end": 0.08
+    }
+  },
+  "dataset": {
+    "input_size": 128,
+    "name": "isic2018",
+    "class_name": "ISIC2018DatasetFast",
+    "data_dir": "/home/manisha/Desktop/isic-challenge-2018",
+    "number_classes": 2,
+    "img_channels": 3,
+    "msk_channels": 1,
+    "data_scale": "full"
+  },
+  "data_loader": {
+    "train": {
+      "batch_size": 32,
+      "shuffle": true,
+      "pin_memory": true
+    },
+    "validation": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": true
+    },
+    "test": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": false
+    }
+  },
+  "training": {
+    "epochs": 500,
+    "intial_weights": {
+      "use": false,
+      "file_path": "/home/manisha/Desktop/isic-challenge-2018"
+    },
+    "loss": {
+      "l2": {
+        "cofficient": 1.0
+      }
+    },
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+        "lr": 0.0001,
+        "betas": [
+          0.7,
+          0.99
+        ],
+        "weight_decay": 0.0
+      }
+    },
+    "scheduler": {
+      "factor": 0.5,
+      "patience": 5
+    },
+    "ema": {
+      "use": true,
+      "params": {
+        "beta": 0.9999,
+        "update_after_step": 500,
+        "update_every": 1,
+        "inv_gamma": 1.0,
+        "power": 0.9
+      }
+    },
+    "loss_name": "l2"
+  },
+  "testing": {
+    "ensemble": 5,
+    "model_weigths": {
+      "overload": false,
+      "file_path": "isic-challenge-2018"
+    },
+    "result_imgs": {
+      "save": false,
+      "dir": "path/to/folder"
+    }
+  },
+  "augmentation": {
+    "p": 0.5,
+    "levels": {
+      "pixel": {
+        "p": 1.0,
+        "transforms": {
+          "CLAHE": {
+            "clip_limit": 4,
+            "tile_grid_size": [
+              3,
+              3
+            ],
+            "p": 0.05
+          },
+          "Emboss": {
+            "p": 0.05
+          },
+          "GaussNoise": {
+            "var_limit": [
+              10,
+              200
+            ],
+            "p": 0.05
+          },
+          "HueSaturationValue": {
+            "hue_shift_limit": 7,
+            "sat_shift_limit": 30,
+            "val_shift_limit": 20,
+            "p": 0.05
+          },
+          "MultiplicativeNoise": {
+            "multiplier": [
+              0.8,
+              1.25
+            ],
+            "elementwise": true,
+            "p": 0.05
+          },
+          "RGBShift": {
+            "p": 0.05
+          },
+          "RandomBrightnessContrast": {
+            "p": 0.05
+          },
+          "RandomGamma": {
+            "gamma_limit": [
+              70,
+              130
+            ],
+            "p": 0.05
+          },
+          "RandomToneCurve": {
+            "scale": 0.15,
+            "p": 0.05
+          },
+          "Sharpen": {
+            "p": 0.05
+          },
+          "Spatter": {
+            "mean": 0,
+            "std": 60,
+            "gauss_sigma": 2,
+            "cutout_threshold": 5,
+            "intensity": -3,
+            "p": 0.05
+          },
+          "UnsharpMask": {
+            "p": 0.05
+          }
+        }
+      },
+      "spacial": {
+        "p": 1,
+        "transforms": {
+          "Affine": {
+            "p": 0.05
+          },
+          "CoarseDropout": {
+            "min_holes": 1,
+            "max_holes": 5,
+            "min_height": 4,
+            "max_height": 16,
+            "min_width": 4,
+            "max_width": 16,
+            "fill_value": [
+              10,
+              20,
+              60
+            ],
+            "p": 0.05
+          },
+          "ElasticTransform": {
+            "alpha": 0.5,
+            "sigma": 1.3,
+            "alpha_affine": 20,
+            "border_mode": 2,
+            "p": 0.05
+          },
+          "HorizontalFlip": {
+            "p": 0.05
+          },
+          "VerticalFlip": {
+            "p": 0.05
+          },
+          "Flip": {
+            "p": 0.05
+          },
+          "GridDistortion": {
+            "border_mode": 4,
+            "p": 0.05
+          },
+          "PiecewiseAffine": {
+            "p": 0.05
+          },
+          "PixelDropout": {
+            "p": 0.05
+          },
+          "RandomRotate90": {
+            "p": 0.05
+          },
+          "Rotate": {
+            "border_mode": 4,
+            "p": 0.05
+          }
+        }
+      }
+    }
+  }
+}
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2024-03-26 18:00:14,185 - INFO) training.py:51 => Device is <cpu>
+2024-03-26 18:00:14,192 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-26 18:00:14,192 - INFO) isic2018.py:271 => There are no pre-saved files.
+2024-03-26 18:00:14,192 - INFO) isic2018.py:272 => Preparing data...
+2024-03-26 18:00:44,029 - INFO) helper_funcs.py:151 => 
+>>>>>>>>>>>>>>>>>>>> Config >>>>>>>>>>>>>>>>>>>>
+{
+  "run": {
+    "device": "gpu:0",
+    "save_imgs": "saved_imgs",
+    "writer_dir": "/home/manisha/Desktop/runs/isic2018",
+    "continue_training": false
+  },
+  "model": {
+    "save_dir": "/home/manisha/Desktop/models/isic2018",
+    "name": "dsd_i01",
+    "class": "DermoSegDiff",
+    "params": {
+      "dim_x": 128,
+      "dim_g": 64,
+      "channels_x": 1,
+      "channels_g": 3,
+      "out_dim": 1,
+      "dim_x_mults": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "dim_g_mults": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "resnet_block_groups": 8
+    }
+  },
+  "diffusion": {
+    "schedule": {
+      "timesteps": 250,
+      "mode": "linear",
+      "beta_start": 0.0004,
+      "beta_end": 0.08
+    }
+  },
+  "dataset": {
+    "input_size": 128,
+    "name": "isic2018",
+    "class_name": "ISIC2018DatasetFast",
+    "data_dir": "/home/manisha/Desktop/isic-challenge-2018",
+    "number_classes": 2,
+    "img_channels": 3,
+    "msk_channels": 1,
+    "data_scale": "full"
+  },
+  "data_loader": {
+    "train": {
+      "batch_size": 32,
+      "shuffle": true,
+      "pin_memory": true
+    },
+    "validation": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": true
+    },
+    "test": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": false
+    }
+  },
+  "training": {
+    "epochs": 500,
+    "intial_weights": {
+      "use": false,
+      "file_path": "/home/manisha/Desktop/isic-challenge-2018"
+    },
+    "loss": {
+      "l2": {
+        "cofficient": 1.0
+      }
+    },
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+        "lr": 0.0001,
+        "betas": [
+          0.7,
+          0.99
+        ],
+        "weight_decay": 0.0
+      }
+    },
+    "scheduler": {
+      "factor": 0.5,
+      "patience": 5
+    },
+    "ema": {
+      "use": true,
+      "params": {
+        "beta": 0.9999,
+        "update_after_step": 500,
+        "update_every": 1,
+        "inv_gamma": 1.0,
+        "power": 0.9
+      }
+    },
+    "loss_name": "l2"
+  },
+  "testing": {
+    "ensemble": 5,
+    "model_weigths": {
+      "overload": false,
+      "file_path": "isic-challenge-2018"
+    },
+    "result_imgs": {
+      "save": false,
+      "dir": "path/to/folder"
+    }
+  },
+  "augmentation": {
+    "p": 0.5,
+    "levels": {
+      "pixel": {
+        "p": 1.0,
+        "transforms": {
+          "CLAHE": {
+            "clip_limit": 4,
+            "tile_grid_size": [
+              3,
+              3
+            ],
+            "p": 0.05
+          },
+          "Emboss": {
+            "p": 0.05
+          },
+          "GaussNoise": {
+            "var_limit": [
+              10,
+              200
+            ],
+            "p": 0.05
+          },
+          "HueSaturationValue": {
+            "hue_shift_limit": 7,
+            "sat_shift_limit": 30,
+            "val_shift_limit": 20,
+            "p": 0.05
+          },
+          "MultiplicativeNoise": {
+            "multiplier": [
+              0.8,
+              1.25
+            ],
+            "elementwise": true,
+            "p": 0.05
+          },
+          "RGBShift": {
+            "p": 0.05
+          },
+          "RandomBrightnessContrast": {
+            "p": 0.05
+          },
+          "RandomGamma": {
+            "gamma_limit": [
+              70,
+              130
+            ],
+            "p": 0.05
+          },
+          "RandomToneCurve": {
+            "scale": 0.15,
+            "p": 0.05
+          },
+          "Sharpen": {
+            "p": 0.05
+          },
+          "Spatter": {
+            "mean": 0,
+            "std": 60,
+            "gauss_sigma": 2,
+            "cutout_threshold": 5,
+            "intensity": -3,
+            "p": 0.05
+          },
+          "UnsharpMask": {
+            "p": 0.05
+          }
+        }
+      },
+      "spacial": {
+        "p": 1,
+        "transforms": {
+          "Affine": {
+            "p": 0.05
+          },
+          "CoarseDropout": {
+            "min_holes": 1,
+            "max_holes": 5,
+            "min_height": 4,
+            "max_height": 16,
+            "min_width": 4,
+            "max_width": 16,
+            "fill_value": [
+              10,
+              20,
+              60
+            ],
+            "p": 0.05
+          },
+          "ElasticTransform": {
+            "alpha": 0.5,
+            "sigma": 1.3,
+            "alpha_affine": 20,
+            "border_mode": 2,
+            "p": 0.05
+          },
+          "HorizontalFlip": {
+            "p": 0.05
+          },
+          "VerticalFlip": {
+            "p": 0.05
+          },
+          "Flip": {
+            "p": 0.05
+          },
+          "GridDistortion": {
+            "border_mode": 4,
+            "p": 0.05
+          },
+          "PiecewiseAffine": {
+            "p": 0.05
+          },
+          "PixelDropout": {
+            "p": 0.05
+          },
+          "RandomRotate90": {
+            "p": 0.05
+          },
+          "Rotate": {
+            "border_mode": 4,
+            "p": 0.05
+          }
+        }
+      }
+    }
+  }
+}
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2024-03-26 18:02:43,393 - INFO) helper_funcs.py:151 => 
+>>>>>>>>>>>>>>>>>>>> Config >>>>>>>>>>>>>>>>>>>>
+{
+  "run": {
+    "device": "gpu:0",
+    "save_imgs": "saved_imgs",
+    "writer_dir": "/home/manisha/Desktop/runs/isic2018",
+    "continue_training": false
+  },
+  "model": {
+    "save_dir": "/home/manisha/Desktop/models/isic2018",
+    "name": "dsd_i01",
+    "class": "DermoSegDiff",
+    "params": {
+      "dim_x": 128,
+      "dim_g": 64,
+      "channels_x": 1,
+      "channels_g": 3,
+      "out_dim": 1,
+      "dim_x_mults": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "dim_g_mults": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "resnet_block_groups": 8
+    }
+  },
+  "diffusion": {
+    "schedule": {
+      "timesteps": 250,
+      "mode": "linear",
+      "beta_start": 0.0004,
+      "beta_end": 0.08
+    }
+  },
+  "dataset": {
+    "input_size": 128,
+    "name": "isic2018",
+    "class_name": "ISIC2018DatasetFast",
+    "data_dir": "/home/manisha/Desktop/isic-challenge-2018",
+    "number_classes": 2,
+    "img_channels": 3,
+    "msk_channels": 1,
+    "data_scale": "full"
+  },
+  "data_loader": {
+    "train": {
+      "batch_size": 32,
+      "shuffle": true,
+      "pin_memory": true
+    },
+    "validation": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": true
+    },
+    "test": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": false
+    }
+  },
+  "training": {
+    "epochs": 500,
+    "intial_weights": {
+      "use": false,
+      "file_path": "/home/manisha/Desktop/isic-challenge-2018"
+    },
+    "loss": {
+      "l2": {
+        "cofficient": 1.0
+      }
+    },
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+        "lr": 0.0001,
+        "betas": [
+          0.7,
+          0.99
+        ],
+        "weight_decay": 0.0
+      }
+    },
+    "scheduler": {
+      "factor": 0.5,
+      "patience": 5
+    },
+    "ema": {
+      "use": true,
+      "params": {
+        "beta": 0.9999,
+        "update_after_step": 500,
+        "update_every": 1,
+        "inv_gamma": 1.0,
+        "power": 0.9
+      }
+    },
+    "loss_name": "l2"
+  },
+  "testing": {
+    "ensemble": 5,
+    "model_weigths": {
+      "overload": false,
+      "file_path": "isic-challenge-2018"
+    },
+    "result_imgs": {
+      "save": false,
+      "dir": "path/to/folder"
+    }
+  },
+  "augmentation": {
+    "p": 0.5,
+    "levels": {
+      "pixel": {
+        "p": 1.0,
+        "transforms": {
+          "CLAHE": {
+            "clip_limit": 4,
+            "tile_grid_size": [
+              3,
+              3
+            ],
+            "p": 0.05
+          },
+          "Emboss": {
+            "p": 0.05
+          },
+          "GaussNoise": {
+            "var_limit": [
+              10,
+              200
+            ],
+            "p": 0.05
+          },
+          "HueSaturationValue": {
+            "hue_shift_limit": 7,
+            "sat_shift_limit": 30,
+            "val_shift_limit": 20,
+            "p": 0.05
+          },
+          "MultiplicativeNoise": {
+            "multiplier": [
+              0.8,
+              1.25
+            ],
+            "elementwise": true,
+            "p": 0.05
+          },
+          "RGBShift": {
+            "p": 0.05
+          },
+          "RandomBrightnessContrast": {
+            "p": 0.05
+          },
+          "RandomGamma": {
+            "gamma_limit": [
+              70,
+              130
+            ],
+            "p": 0.05
+          },
+          "RandomToneCurve": {
+            "scale": 0.15,
+            "p": 0.05
+          },
+          "Sharpen": {
+            "p": 0.05
+          },
+          "Spatter": {
+            "mean": 0,
+            "std": 60,
+            "gauss_sigma": 2,
+            "cutout_threshold": 5,
+            "intensity": -3,
+            "p": 0.05
+          },
+          "UnsharpMask": {
+            "p": 0.05
+          }
+        }
+      },
+      "spacial": {
+        "p": 1,
+        "transforms": {
+          "Affine": {
+            "p": 0.05
+          },
+          "CoarseDropout": {
+            "min_holes": 1,
+            "max_holes": 5,
+            "min_height": 4,
+            "max_height": 16,
+            "min_width": 4,
+            "max_width": 16,
+            "fill_value": [
+              10,
+              20,
+              60
+            ],
+            "p": 0.05
+          },
+          "ElasticTransform": {
+            "alpha": 0.5,
+            "sigma": 1.3,
+            "alpha_affine": 20,
+            "border_mode": 2,
+            "p": 0.05
+          },
+          "HorizontalFlip": {
+            "p": 0.05
+          },
+          "VerticalFlip": {
+            "p": 0.05
+          },
+          "Flip": {
+            "p": 0.05
+          },
+          "GridDistortion": {
+            "border_mode": 4,
+            "p": 0.05
+          },
+          "PiecewiseAffine": {
+            "p": 0.05
+          },
+          "PixelDropout": {
+            "p": 0.05
+          },
+          "RandomRotate90": {
+            "p": 0.05
+          },
+          "Rotate": {
+            "border_mode": 4,
+            "p": 0.05
+          }
+        }
+      }
+    }
+  }
+}
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2024-03-26 18:02:43,394 - INFO) training.py:51 => Device is <cpu>
+2024-03-26 18:02:43,400 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-26 18:02:43,400 - INFO) isic2018.py:271 => There are no pre-saved files.
+2024-03-26 18:02:43,400 - INFO) isic2018.py:272 => Preparing data...
+2024-03-26 18:08:05,723 - INFO) isic2018.py:260 => Saving data...
+2024-03-26 18:08:08,459 - INFO) isic2018.py:263 => Saved at:
+  X: /home/manisha/Desktop/isic-challenge-2018/np/X_tr_128x128.npy
+  Y: /home/manisha/Desktop/isic-challenge-2018/np/Y_tr_128x128.npy
+2024-03-26 18:08:08,477 - INFO) isic2018.py:277 => Loading...
+2024-03-26 18:08:08,760 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-26 18:08:08,813 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-26 18:08:08,814 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-03-26 18:08:08,814 - INFO) isic2018.py:277 => Loading...
+2024-03-26 18:08:08,940 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-26 18:08:09,142 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-26 18:08:09,142 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-03-26 18:08:09,142 - INFO) isic2018.py:277 => Loading...
+2024-03-26 18:08:09,269 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-26 18:08:09,320 - INFO) isic2018.py:103 => ISIC 2018:
+2024-03-26 18:08:09,320 - INFO) isic2018.py:104 => ├──> Length of trainig_dataset:	   1815
+2024-03-26 18:08:09,320 - INFO) isic2018.py:105 => ├──> Length of validation_dataset: 259
+2024-03-26 18:08:09,320 - INFO) isic2018.py:106 => └──> Length of test_dataset:	   520
+2024-03-26 18:08:10,344 - INFO) training.py:87 => Number of model parameters: 321181377
+2024-03-26 18:13:35,695 - INFO) helper_funcs.py:151 => 
+>>>>>>>>>>>>>>>>>>>> Config >>>>>>>>>>>>>>>>>>>>
+{
+  "run": {
+    "device": "gpu:0",
+    "save_imgs": "saved_imgs",
+    "writer_dir": "/home/manisha/Desktop/runs/isic2018",
+    "continue_training": false
+  },
+  "model": {
+    "save_dir": "/home/manisha/Desktop/models/isic2018",
+    "name": "dsd_i01",
+    "class": "DermoSegDiff",
+    "params": {
+      "dim_x": 128,
+      "dim_g": 64,
+      "channels_x": 1,
+      "channels_g": 3,
+      "out_dim": 1,
+      "dim_x_mults": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "dim_g_mults": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "resnet_block_groups": 8
+    }
+  },
+  "diffusion": {
+    "schedule": {
+      "timesteps": 250,
+      "mode": "linear",
+      "beta_start": 0.0004,
+      "beta_end": 0.08
+    }
+  },
+  "dataset": {
+    "input_size": 128,
+    "name": "isic2018",
+    "class_name": "ISIC2018DatasetFast",
+    "data_dir": "/home/manisha/Desktop/isic-challenge-2018",
+    "number_classes": 2,
+    "img_channels": 3,
+    "msk_channels": 1,
+    "data_scale": "full"
+  },
+  "data_loader": {
+    "train": {
+      "batch_size": 32,
+      "shuffle": true,
+      "pin_memory": true
+    },
+    "validation": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": true
+    },
+    "test": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": false
+    }
+  },
+  "training": {
+    "epochs": 500,
+    "intial_weights": {
+      "use": false,
+      "file_path": "/home/manisha/Desktop/isic-challenge-2018"
+    },
+    "loss": {
+      "l2": {
+        "cofficient": 1.0
+      }
+    },
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+        "lr": 0.0001,
+        "betas": [
+          0.7,
+          0.99
+        ],
+        "weight_decay": 0.0
+      }
+    },
+    "scheduler": {
+      "factor": 0.5,
+      "patience": 5
+    },
+    "ema": {
+      "use": true,
+      "params": {
+        "beta": 0.9999,
+        "update_after_step": 500,
+        "update_every": 1,
+        "inv_gamma": 1.0,
+        "power": 0.9
+      }
+    },
+    "loss_name": "l2"
+  },
+  "testing": {
+    "ensemble": 5,
+    "model_weigths": {
+      "overload": false,
+      "file_path": "isic-challenge-2018"
+    },
+    "result_imgs": {
+      "save": false,
+      "dir": "path/to/folder"
+    }
+  },
+  "augmentation": {
+    "p": 0.5,
+    "levels": {
+      "pixel": {
+        "p": 1.0,
+        "transforms": {
+          "CLAHE": {
+            "clip_limit": 4,
+            "tile_grid_size": [
+              3,
+              3
+            ],
+            "p": 0.05
+          },
+          "Emboss": {
+            "p": 0.05
+          },
+          "GaussNoise": {
+            "var_limit": [
+              10,
+              200
+            ],
+            "p": 0.05
+          },
+          "HueSaturationValue": {
+            "hue_shift_limit": 7,
+            "sat_shift_limit": 30,
+            "val_shift_limit": 20,
+            "p": 0.05
+          },
+          "MultiplicativeNoise": {
+            "multiplier": [
+              0.8,
+              1.25
+            ],
+            "elementwise": true,
+            "p": 0.05
+          },
+          "RGBShift": {
+            "p": 0.05
+          },
+          "RandomBrightnessContrast": {
+            "p": 0.05
+          },
+          "RandomGamma": {
+            "gamma_limit": [
+              70,
+              130
+            ],
+            "p": 0.05
+          },
+          "RandomToneCurve": {
+            "scale": 0.15,
+            "p": 0.05
+          },
+          "Sharpen": {
+            "p": 0.05
+          },
+          "Spatter": {
+            "mean": 0,
+            "std": 60,
+            "gauss_sigma": 2,
+            "cutout_threshold": 5,
+            "intensity": -3,
+            "p": 0.05
+          },
+          "UnsharpMask": {
+            "p": 0.05
+          }
+        }
+      },
+      "spacial": {
+        "p": 1,
+        "transforms": {
+          "Affine": {
+            "p": 0.05
+          },
+          "CoarseDropout": {
+            "min_holes": 1,
+            "max_holes": 5,
+            "min_height": 4,
+            "max_height": 16,
+            "min_width": 4,
+            "max_width": 16,
+            "fill_value": [
+              10,
+              20,
+              60
+            ],
+            "p": 0.05
+          },
+          "ElasticTransform": {
+            "alpha": 0.5,
+            "sigma": 1.3,
+            "alpha_affine": 20,
+            "border_mode": 2,
+            "p": 0.05
+          },
+          "HorizontalFlip": {
+            "p": 0.05
+          },
+          "VerticalFlip": {
+            "p": 0.05
+          },
+          "Flip": {
+            "p": 0.05
+          },
+          "GridDistortion": {
+            "border_mode": 4,
+            "p": 0.05
+          },
+          "PiecewiseAffine": {
+            "p": 0.05
+          },
+          "PixelDropout": {
+            "p": 0.05
+          },
+          "RandomRotate90": {
+            "p": 0.05
+          },
+          "Rotate": {
+            "border_mode": 4,
+            "p": 0.05
+          }
+        }
+      }
+    }
+  }
+}
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2024-03-26 18:13:35,696 - INFO) training.py:51 => Device is <cpu>
+2024-03-26 18:13:35,702 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-26 18:13:35,702 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-03-26 18:13:35,702 - INFO) isic2018.py:277 => Loading...
+2024-03-26 18:13:35,829 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-26 18:13:35,875 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-26 18:13:35,875 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-03-26 18:13:35,875 - INFO) isic2018.py:277 => Loading...
+2024-03-26 18:13:36,001 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-26 18:13:36,046 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-26 18:13:36,047 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-03-26 18:13:36,047 - INFO) isic2018.py:277 => Loading...
+2024-03-26 18:13:36,172 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-26 18:13:36,219 - INFO) isic2018.py:103 => ISIC 2018:
+2024-03-26 18:13:36,219 - INFO) isic2018.py:104 => ├──> Length of trainig_dataset:	   1815
+2024-03-26 18:13:36,219 - INFO) isic2018.py:105 => ├──> Length of validation_dataset: 259
+2024-03-26 18:13:36,219 - INFO) isic2018.py:106 => └──> Length of test_dataset:	   520
+2024-03-26 18:13:37,487 - INFO) training.py:87 => Number of model parameters: 321181377
+2024-03-26 20:13:58,004 - INFO) helper_funcs.py:151 => 
+>>>>>>>>>>>>>>>>>>>> Config >>>>>>>>>>>>>>>>>>>>
+{
+  "run": {
+    "device": "gpu:0",
+    "save_imgs": "saved_imgs",
+    "writer_dir": "/home/manisha/Desktop/runs/isic2018",
+    "continue_training": false
+  },
+  "model": {
+    "save_dir": "/home/manisha/Desktop/models/isic2018",
+    "name": "dsd_i01",
+    "class": "DermoSegDiff",
+    "params": {
+      "dim_x": 128,
+      "dim_g": 64,
+      "channels_x": 1,
+      "channels_g": 3,
+      "out_dim": 1,
+      "dim_x_mults": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "dim_g_mults": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "resnet_block_groups": 8
+    }
+  },
+  "diffusion": {
+    "schedule": {
+      "timesteps": 250,
+      "mode": "linear",
+      "beta_start": 0.0004,
+      "beta_end": 0.08
+    }
+  },
+  "dataset": {
+    "input_size": 128,
+    "name": "isic2018",
+    "class_name": "ISIC2018DatasetFast",
+    "data_dir": "/home/manisha/Desktop/isic-challenge-2018",
+    "number_classes": 2,
+    "img_channels": 3,
+    "msk_channels": 1,
+    "data_scale": "full"
+  },
+  "data_loader": {
+    "train": {
+      "batch_size": 32,
+      "shuffle": true,
+      "pin_memory": true
+    },
+    "validation": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": true
+    },
+    "test": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": false
+    }
+  },
+  "training": {
+    "epochs": 500,
+    "intial_weights": {
+      "use": false,
+      "file_path": "/home/manisha/Desktop/isic-challenge-2018"
+    },
+    "loss": {
+      "l2": {
+        "cofficient": 1.0
+      }
+    },
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+        "lr": 0.0001,
+        "betas": [
+          0.7,
+          0.99
+        ],
+        "weight_decay": 0.0
+      }
+    },
+    "scheduler": {
+      "factor": 0.5,
+      "patience": 5
+    },
+    "ema": {
+      "use": true,
+      "params": {
+        "beta": 0.9999,
+        "update_after_step": 500,
+        "update_every": 1,
+        "inv_gamma": 1.0,
+        "power": 0.9
+      }
+    },
+    "loss_name": "l2"
+  },
+  "testing": {
+    "ensemble": 5,
+    "model_weigths": {
+      "overload": false,
+      "file_path": "isic-challenge-2018"
+    },
+    "result_imgs": {
+      "save": false,
+      "dir": "path/to/folder"
+    }
+  },
+  "augmentation": {
+    "p": 0.5,
+    "levels": {
+      "pixel": {
+        "p": 1.0,
+        "transforms": {
+          "CLAHE": {
+            "clip_limit": 4,
+            "tile_grid_size": [
+              3,
+              3
+            ],
+            "p": 0.05
+          },
+          "Emboss": {
+            "p": 0.05
+          },
+          "GaussNoise": {
+            "var_limit": [
+              10,
+              200
+            ],
+            "p": 0.05
+          },
+          "HueSaturationValue": {
+            "hue_shift_limit": 7,
+            "sat_shift_limit": 30,
+            "val_shift_limit": 20,
+            "p": 0.05
+          },
+          "MultiplicativeNoise": {
+            "multiplier": [
+              0.8,
+              1.25
+            ],
+            "elementwise": true,
+            "p": 0.05
+          },
+          "RGBShift": {
+            "p": 0.05
+          },
+          "RandomBrightnessContrast": {
+            "p": 0.05
+          },
+          "RandomGamma": {
+            "gamma_limit": [
+              70,
+              130
+            ],
+            "p": 0.05
+          },
+          "RandomToneCurve": {
+            "scale": 0.15,
+            "p": 0.05
+          },
+          "Sharpen": {
+            "p": 0.05
+          },
+          "Spatter": {
+            "mean": 0,
+            "std": 60,
+            "gauss_sigma": 2,
+            "cutout_threshold": 5,
+            "intensity": -3,
+            "p": 0.05
+          },
+          "UnsharpMask": {
+            "p": 0.05
+          }
+        }
+      },
+      "spacial": {
+        "p": 1,
+        "transforms": {
+          "Affine": {
+            "p": 0.05
+          },
+          "CoarseDropout": {
+            "min_holes": 1,
+            "max_holes": 5,
+            "min_height": 4,
+            "max_height": 16,
+            "min_width": 4,
+            "max_width": 16,
+            "fill_value": [
+              10,
+              20,
+              60
+            ],
+            "p": 0.05
+          },
+          "ElasticTransform": {
+            "alpha": 0.5,
+            "sigma": 1.3,
+            "alpha_affine": 20,
+            "border_mode": 2,
+            "p": 0.05
+          },
+          "HorizontalFlip": {
+            "p": 0.05
+          },
+          "VerticalFlip": {
+            "p": 0.05
+          },
+          "Flip": {
+            "p": 0.05
+          },
+          "GridDistortion": {
+            "border_mode": 4,
+            "p": 0.05
+          },
+          "PiecewiseAffine": {
+            "p": 0.05
+          },
+          "PixelDropout": {
+            "p": 0.05
+          },
+          "RandomRotate90": {
+            "p": 0.05
+          },
+          "Rotate": {
+            "border_mode": 4,
+            "p": 0.05
+          }
+        }
+      }
+    }
+  }
+}
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2024-03-26 20:13:58,004 - INFO) training.py:51 => Device is <cpu>
+2024-03-26 20:13:58,010 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-26 20:13:58,011 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-03-26 20:13:58,011 - INFO) isic2018.py:277 => Loading...
+2024-03-26 20:13:58,143 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-26 20:13:58,191 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-26 20:13:58,191 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-03-26 20:13:58,192 - INFO) isic2018.py:277 => Loading...
+2024-03-26 20:13:58,327 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-26 20:13:58,375 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-26 20:13:58,375 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-03-26 20:13:58,375 - INFO) isic2018.py:277 => Loading...
+2024-03-26 20:13:58,505 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-26 20:13:58,550 - INFO) isic2018.py:103 => ISIC 2018:
+2024-03-26 20:13:58,550 - INFO) isic2018.py:104 => ├──> Length of trainig_dataset:	   1815
+2024-03-26 20:13:58,550 - INFO) isic2018.py:105 => ├──> Length of validation_dataset: 259
+2024-03-26 20:13:58,550 - INFO) isic2018.py:106 => └──> Length of test_dataset:	   520
+2024-03-26 20:13:59,818 - INFO) training.py:87 => Number of model parameters: 321181377
+2024-03-26 20:26:36,879 - INFO) helper_funcs.py:151 => 
+>>>>>>>>>>>>>>>>>>>> Config >>>>>>>>>>>>>>>>>>>>
+{
+  "run": {
+    "device": "gpu:0",
+    "save_imgs": "saved_imgs",
+    "writer_dir": "/home/manisha/Desktop/runs/isic2018",
+    "continue_training": false
+  },
+  "model": {
+    "save_dir": "/home/manisha/Desktop/models/isic2018",
+    "name": "dsd_i01",
+    "class": "DermoSegDiff",
+    "params": {
+      "dim_x": 128,
+      "dim_g": 64,
+      "channels_x": 1,
+      "channels_g": 3,
+      "out_dim": 1,
+      "dim_x_mults": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "dim_g_mults": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "resnet_block_groups": 8
+    }
+  },
+  "diffusion": {
+    "schedule": {
+      "timesteps": 250,
+      "mode": "linear",
+      "beta_start": 0.0004,
+      "beta_end": 0.08
+    }
+  },
+  "dataset": {
+    "input_size": 128,
+    "name": "isic2018",
+    "class_name": "ISIC2018DatasetFast",
+    "data_dir": "/home/manisha/Desktop/isic-challenge-2018",
+    "number_classes": 2,
+    "img_channels": 3,
+    "msk_channels": 1,
+    "data_scale": "full"
+  },
+  "data_loader": {
+    "train": {
+      "batch_size": 32,
+      "shuffle": true,
+      "pin_memory": true
+    },
+    "validation": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": true
+    },
+    "test": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": false
+    }
+  },
+  "training": {
+    "epochs": 500,
+    "intial_weights": {
+      "use": false,
+      "file_path": "/home/manisha/Desktop/isic-challenge-2018"
+    },
+    "loss": {
+      "l2": {
+        "cofficient": 1.0
+      }
+    },
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+        "lr": 0.0001,
+        "betas": [
+          0.7,
+          0.99
+        ],
+        "weight_decay": 0.0
+      }
+    },
+    "scheduler": {
+      "factor": 0.5,
+      "patience": 5
+    },
+    "ema": {
+      "use": true,
+      "params": {
+        "beta": 0.9999,
+        "update_after_step": 500,
+        "update_every": 1,
+        "inv_gamma": 1.0,
+        "power": 0.9
+      }
+    },
+    "loss_name": "l2"
+  },
+  "testing": {
+    "ensemble": 5,
+    "model_weigths": {
+      "overload": false,
+      "file_path": "isic-challenge-2018"
+    },
+    "result_imgs": {
+      "save": false,
+      "dir": "path/to/folder"
+    }
+  },
+  "augmentation": {
+    "p": 0.5,
+    "levels": {
+      "pixel": {
+        "p": 1.0,
+        "transforms": {
+          "CLAHE": {
+            "clip_limit": 4,
+            "tile_grid_size": [
+              3,
+              3
+            ],
+            "p": 0.05
+          },
+          "Emboss": {
+            "p": 0.05
+          },
+          "GaussNoise": {
+            "var_limit": [
+              10,
+              200
+            ],
+            "p": 0.05
+          },
+          "HueSaturationValue": {
+            "hue_shift_limit": 7,
+            "sat_shift_limit": 30,
+            "val_shift_limit": 20,
+            "p": 0.05
+          },
+          "MultiplicativeNoise": {
+            "multiplier": [
+              0.8,
+              1.25
+            ],
+            "elementwise": true,
+            "p": 0.05
+          },
+          "RGBShift": {
+            "p": 0.05
+          },
+          "RandomBrightnessContrast": {
+            "p": 0.05
+          },
+          "RandomGamma": {
+            "gamma_limit": [
+              70,
+              130
+            ],
+            "p": 0.05
+          },
+          "RandomToneCurve": {
+            "scale": 0.15,
+            "p": 0.05
+          },
+          "Sharpen": {
+            "p": 0.05
+          },
+          "Spatter": {
+            "mean": 0,
+            "std": 60,
+            "gauss_sigma": 2,
+            "cutout_threshold": 5,
+            "intensity": -3,
+            "p": 0.05
+          },
+          "UnsharpMask": {
+            "p": 0.05
+          }
+        }
+      },
+      "spacial": {
+        "p": 1,
+        "transforms": {
+          "Affine": {
+            "p": 0.05
+          },
+          "CoarseDropout": {
+            "min_holes": 1,
+            "max_holes": 5,
+            "min_height": 4,
+            "max_height": 16,
+            "min_width": 4,
+            "max_width": 16,
+            "fill_value": [
+              10,
+              20,
+              60
+            ],
+            "p": 0.05
+          },
+          "ElasticTransform": {
+            "alpha": 0.5,
+            "sigma": 1.3,
+            "alpha_affine": 20,
+            "border_mode": 2,
+            "p": 0.05
+          },
+          "HorizontalFlip": {
+            "p": 0.05
+          },
+          "VerticalFlip": {
+            "p": 0.05
+          },
+          "Flip": {
+            "p": 0.05
+          },
+          "GridDistortion": {
+            "border_mode": 4,
+            "p": 0.05
+          },
+          "PiecewiseAffine": {
+            "p": 0.05
+          },
+          "PixelDropout": {
+            "p": 0.05
+          },
+          "RandomRotate90": {
+            "p": 0.05
+          },
+          "Rotate": {
+            "border_mode": 4,
+            "p": 0.05
+          }
+        }
+      }
+    }
+  }
+}
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2024-03-26 20:26:36,880 - INFO) training.py:51 => Device is <cpu>
+2024-03-26 20:26:36,886 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-26 20:26:36,887 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-03-26 20:26:36,887 - INFO) isic2018.py:277 => Loading...
+2024-03-26 20:26:37,019 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-26 20:26:37,067 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-26 20:26:37,068 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-03-26 20:26:37,068 - INFO) isic2018.py:277 => Loading...
+2024-03-26 20:26:37,196 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-26 20:26:37,244 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-26 20:26:37,244 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-03-26 20:26:37,244 - INFO) isic2018.py:277 => Loading...
+2024-03-26 20:26:37,377 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-26 20:26:37,427 - INFO) isic2018.py:103 => ISIC 2018:
+2024-03-26 20:26:37,427 - INFO) isic2018.py:104 => ├──> Length of trainig_dataset:	   1815
+2024-03-26 20:26:37,427 - INFO) isic2018.py:105 => ├──> Length of validation_dataset: 259
+2024-03-26 20:26:37,427 - INFO) isic2018.py:106 => └──> Length of test_dataset:	   520
+2024-03-26 20:26:38,699 - INFO) training.py:87 => Number of model parameters: 321181377
+2024-03-26 20:45:00,698 - INFO) helper_funcs.py:151 => 
+>>>>>>>>>>>>>>>>>>>> Config >>>>>>>>>>>>>>>>>>>>
+{
+  "run": {
+    "device": "gpu:0",
+    "save_imgs": "saved_imgs",
+    "writer_dir": "/home/manisha/Desktop/runs/isic2018",
+    "continue_training": false
+  },
+  "model": {
+    "save_dir": "/home/manisha/Desktop/models/isic2018",
+    "name": "dsd_i01",
+    "class": "DermoSegDiff",
+    "params": {
+      "dim_x": 128,
+      "dim_g": 64,
+      "channels_x": 1,
+      "channels_g": 3,
+      "out_dim": 1,
+      "dim_x_mults": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "dim_g_mults": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "resnet_block_groups": 8
+    }
+  },
+  "diffusion": {
+    "schedule": {
+      "timesteps": 250,
+      "mode": "linear",
+      "beta_start": 0.0004,
+      "beta_end": 0.08
+    }
+  },
+  "dataset": {
+    "input_size": 128,
+    "name": "isic2018",
+    "class_name": "ISIC2018DatasetFast",
+    "data_dir": "/home/manisha/Desktop/isic-challenge-2018",
+    "number_classes": 2,
+    "img_channels": 3,
+    "msk_channels": 1,
+    "data_scale": "full"
+  },
+  "data_loader": {
+    "train": {
+      "batch_size": 32,
+      "shuffle": true,
+      "pin_memory": true
+    },
+    "validation": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": true
+    },
+    "test": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": false
+    }
+  },
+  "training": {
+    "epochs": 500,
+    "intial_weights": {
+      "use": false,
+      "file_path": "/home/manisha/Desktop/isic-challenge-2018"
+    },
+    "loss": {
+      "l2": {
+        "cofficient": 1.0
+      }
+    },
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+        "lr": 0.0001,
+        "betas": [
+          0.7,
+          0.99
+        ],
+        "weight_decay": 0.0
+      }
+    },
+    "scheduler": {
+      "factor": 0.5,
+      "patience": 5
+    },
+    "ema": {
+      "use": true,
+      "params": {
+        "beta": 0.9999,
+        "update_after_step": 500,
+        "update_every": 1,
+        "inv_gamma": 1.0,
+        "power": 0.9
+      }
+    },
+    "loss_name": "l2"
+  },
+  "testing": {
+    "ensemble": 5,
+    "model_weigths": {
+      "overload": false,
+      "file_path": "isic-challenge-2018"
+    },
+    "result_imgs": {
+      "save": false,
+      "dir": "path/to/folder"
+    }
+  },
+  "augmentation": {
+    "p": 0.5,
+    "levels": {
+      "pixel": {
+        "p": 1.0,
+        "transforms": {
+          "CLAHE": {
+            "clip_limit": 4,
+            "tile_grid_size": [
+              3,
+              3
+            ],
+            "p": 0.05
+          },
+          "Emboss": {
+            "p": 0.05
+          },
+          "GaussNoise": {
+            "var_limit": [
+              10,
+              200
+            ],
+            "p": 0.05
+          },
+          "HueSaturationValue": {
+            "hue_shift_limit": 7,
+            "sat_shift_limit": 30,
+            "val_shift_limit": 20,
+            "p": 0.05
+          },
+          "MultiplicativeNoise": {
+            "multiplier": [
+              0.8,
+              1.25
+            ],
+            "elementwise": true,
+            "p": 0.05
+          },
+          "RGBShift": {
+            "p": 0.05
+          },
+          "RandomBrightnessContrast": {
+            "p": 0.05
+          },
+          "RandomGamma": {
+            "gamma_limit": [
+              70,
+              130
+            ],
+            "p": 0.05
+          },
+          "RandomToneCurve": {
+            "scale": 0.15,
+            "p": 0.05
+          },
+          "Sharpen": {
+            "p": 0.05
+          },
+          "Spatter": {
+            "mean": 0,
+            "std": 60,
+            "gauss_sigma": 2,
+            "cutout_threshold": 5,
+            "intensity": -3,
+            "p": 0.05
+          },
+          "UnsharpMask": {
+            "p": 0.05
+          }
+        }
+      },
+      "spacial": {
+        "p": 1,
+        "transforms": {
+          "Affine": {
+            "p": 0.05
+          },
+          "CoarseDropout": {
+            "min_holes": 1,
+            "max_holes": 5,
+            "min_height": 4,
+            "max_height": 16,
+            "min_width": 4,
+            "max_width": 16,
+            "fill_value": [
+              10,
+              20,
+              60
+            ],
+            "p": 0.05
+          },
+          "ElasticTransform": {
+            "alpha": 0.5,
+            "sigma": 1.3,
+            "alpha_affine": 20,
+            "border_mode": 2,
+            "p": 0.05
+          },
+          "HorizontalFlip": {
+            "p": 0.05
+          },
+          "VerticalFlip": {
+            "p": 0.05
+          },
+          "Flip": {
+            "p": 0.05
+          },
+          "GridDistortion": {
+            "border_mode": 4,
+            "p": 0.05
+          },
+          "PiecewiseAffine": {
+            "p": 0.05
+          },
+          "PixelDropout": {
+            "p": 0.05
+          },
+          "RandomRotate90": {
+            "p": 0.05
+          },
+          "Rotate": {
+            "border_mode": 4,
+            "p": 0.05
+          }
+        }
+      }
+    }
+  }
+}
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2024-03-26 20:45:00,731 - INFO) training.py:51 => Device is <cpu>
+2024-03-26 20:45:00,737 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-26 20:45:00,737 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-03-26 20:45:00,737 - INFO) isic2018.py:277 => Loading...
+2024-03-26 20:45:03,415 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-26 20:45:03,465 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-26 20:45:03,465 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-03-26 20:45:03,465 - INFO) isic2018.py:277 => Loading...
+2024-03-26 20:45:03,605 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-26 20:45:03,650 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-26 20:45:03,650 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-03-26 20:45:03,650 - INFO) isic2018.py:277 => Loading...
+2024-03-26 20:45:03,789 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-26 20:45:03,839 - INFO) isic2018.py:103 => ISIC 2018:
+2024-03-26 20:45:03,840 - INFO) isic2018.py:104 => ├──> Length of trainig_dataset:	   1815
+2024-03-26 20:45:03,840 - INFO) isic2018.py:105 => ├──> Length of validation_dataset: 259
+2024-03-26 20:45:03,840 - INFO) isic2018.py:106 => └──> Length of test_dataset:	   520
+2024-03-26 20:45:05,227 - INFO) training.py:87 => Number of model parameters: 321181377
+2024-03-26 20:49:17,030 - INFO) helper_funcs.py:151 => 
+>>>>>>>>>>>>>>>>>>>> Config >>>>>>>>>>>>>>>>>>>>
+{
+  "run": {
+    "device": "gpu:0",
+    "save_imgs": "saved_imgs",
+    "writer_dir": "/home/manisha/Desktop/runs/isic2018",
+    "continue_training": false
+  },
+  "model": {
+    "save_dir": "/home/manisha/Desktop/models/isic2018",
+    "name": "dsd_i01",
+    "class": "DermoSegDiff",
+    "params": {
+      "dim_x": 128,
+      "dim_g": 64,
+      "channels_x": 1,
+      "channels_g": 3,
+      "out_dim": 1,
+      "dim_x_mults": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "dim_g_mults": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "resnet_block_groups": 8
+    }
+  },
+  "diffusion": {
+    "schedule": {
+      "timesteps": 250,
+      "mode": "linear",
+      "beta_start": 0.0004,
+      "beta_end": 0.08
+    }
+  },
+  "dataset": {
+    "input_size": 128,
+    "name": "isic2018",
+    "class_name": "ISIC2018DatasetFast",
+    "data_dir": "/home/manisha/Desktop/isic-challenge-2018",
+    "number_classes": 2,
+    "img_channels": 3,
+    "msk_channels": 1,
+    "data_scale": "full"
+  },
+  "data_loader": {
+    "train": {
+      "batch_size": 32,
+      "shuffle": true,
+      "pin_memory": true
+    },
+    "validation": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": true
+    },
+    "test": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": false
+    }
+  },
+  "training": {
+    "epochs": 500,
+    "intial_weights": {
+      "use": false,
+      "file_path": "/home/manisha/Desktop/isic-challenge-2018"
+    },
+    "loss": {
+      "l2": {
+        "cofficient": 1.0
+      }
+    },
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+        "lr": 0.0001,
+        "betas": [
+          0.7,
+          0.99
+        ],
+        "weight_decay": 0.0
+      }
+    },
+    "scheduler": {
+      "factor": 0.5,
+      "patience": 5
+    },
+    "ema": {
+      "use": true,
+      "params": {
+        "beta": 0.9999,
+        "update_after_step": 500,
+        "update_every": 1,
+        "inv_gamma": 1.0,
+        "power": 0.9
+      }
+    },
+    "loss_name": "l2"
+  },
+  "testing": {
+    "ensemble": 5,
+    "model_weigths": {
+      "overload": false,
+      "file_path": "isic-challenge-2018"
+    },
+    "result_imgs": {
+      "save": false,
+      "dir": "path/to/folder"
+    }
+  },
+  "augmentation": {
+    "p": 0.5,
+    "levels": {
+      "pixel": {
+        "p": 1.0,
+        "transforms": {
+          "CLAHE": {
+            "clip_limit": 4,
+            "tile_grid_size": [
+              3,
+              3
+            ],
+            "p": 0.05
+          },
+          "Emboss": {
+            "p": 0.05
+          },
+          "GaussNoise": {
+            "var_limit": [
+              10,
+              200
+            ],
+            "p": 0.05
+          },
+          "HueSaturationValue": {
+            "hue_shift_limit": 7,
+            "sat_shift_limit": 30,
+            "val_shift_limit": 20,
+            "p": 0.05
+          },
+          "MultiplicativeNoise": {
+            "multiplier": [
+              0.8,
+              1.25
+            ],
+            "elementwise": true,
+            "p": 0.05
+          },
+          "RGBShift": {
+            "p": 0.05
+          },
+          "RandomBrightnessContrast": {
+            "p": 0.05
+          },
+          "RandomGamma": {
+            "gamma_limit": [
+              70,
+              130
+            ],
+            "p": 0.05
+          },
+          "RandomToneCurve": {
+            "scale": 0.15,
+            "p": 0.05
+          },
+          "Sharpen": {
+            "p": 0.05
+          },
+          "Spatter": {
+            "mean": 0,
+            "std": 60,
+            "gauss_sigma": 2,
+            "cutout_threshold": 5,
+            "intensity": -3,
+            "p": 0.05
+          },
+          "UnsharpMask": {
+            "p": 0.05
+          }
+        }
+      },
+      "spacial": {
+        "p": 1,
+        "transforms": {
+          "Affine": {
+            "p": 0.05
+          },
+          "CoarseDropout": {
+            "min_holes": 1,
+            "max_holes": 5,
+            "min_height": 4,
+            "max_height": 16,
+            "min_width": 4,
+            "max_width": 16,
+            "fill_value": [
+              10,
+              20,
+              60
+            ],
+            "p": 0.05
+          },
+          "ElasticTransform": {
+            "alpha": 0.5,
+            "sigma": 1.3,
+            "alpha_affine": 20,
+            "border_mode": 2,
+            "p": 0.05
+          },
+          "HorizontalFlip": {
+            "p": 0.05
+          },
+          "VerticalFlip": {
+            "p": 0.05
+          },
+          "Flip": {
+            "p": 0.05
+          },
+          "GridDistortion": {
+            "border_mode": 4,
+            "p": 0.05
+          },
+          "PiecewiseAffine": {
+            "p": 0.05
+          },
+          "PixelDropout": {
+            "p": 0.05
+          },
+          "RandomRotate90": {
+            "p": 0.05
+          },
+          "Rotate": {
+            "border_mode": 4,
+            "p": 0.05
+          }
+        }
+      }
+    }
+  }
+}
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2024-03-26 20:49:17,030 - INFO) training.py:51 => Device is <cpu>
+2024-03-26 20:49:17,037 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-26 20:49:17,037 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-03-26 20:49:17,037 - INFO) isic2018.py:277 => Loading...
+2024-03-26 20:49:17,182 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-26 20:49:17,234 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-26 20:49:17,234 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-03-26 20:49:17,234 - INFO) isic2018.py:277 => Loading...
+2024-03-26 20:49:17,366 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-26 20:49:17,415 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-26 20:49:17,415 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-03-26 20:49:17,415 - INFO) isic2018.py:277 => Loading...
+2024-03-26 20:49:17,547 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-26 20:49:17,599 - INFO) isic2018.py:103 => ISIC 2018:
+2024-03-26 20:49:17,599 - INFO) isic2018.py:104 => ├──> Length of trainig_dataset:	   1815
+2024-03-26 20:49:17,599 - INFO) isic2018.py:105 => ├──> Length of validation_dataset: 259
+2024-03-26 20:49:17,599 - INFO) isic2018.py:106 => └──> Length of test_dataset:	   520
+2024-03-26 20:49:18,908 - INFO) training.py:87 => Number of model parameters: 321181377
+2024-03-27 08:13:11,746 - INFO) helper_funcs.py:151 => 
+>>>>>>>>>>>>>>>>>>>> Config >>>>>>>>>>>>>>>>>>>>
+{
+  "run": {
+    "device": "gpu:0",
+    "save_imgs": "saved_imgs",
+    "writer_dir": "/home/manisha/Desktop/runs/isic2018",
+    "continue_training": false
+  },
+  "model": {
+    "save_dir": "/home/manisha/Desktop/models/isic2018",
+    "name": "dsd_i01",
+    "class": "DermoSegDiff",
+    "params": {
+      "dim_x": 128,
+      "dim_g": 64,
+      "channels_x": 1,
+      "channels_g": 3,
+      "out_dim": 1,
+      "dim_x_mults": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "dim_g_mults": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "resnet_block_groups": 8
+    }
+  },
+  "diffusion": {
+    "schedule": {
+      "timesteps": 250,
+      "mode": "linear",
+      "beta_start": 0.0004,
+      "beta_end": 0.08
+    }
+  },
+  "dataset": {
+    "input_size": 128,
+    "name": "isic2018",
+    "class_name": "ISIC2018DatasetFast",
+    "data_dir": "/home/manisha/Desktop/isic-challenge-2018",
+    "number_classes": 2,
+    "img_channels": 3,
+    "msk_channels": 1,
+    "data_scale": "full"
+  },
+  "data_loader": {
+    "train": {
+      "batch_size": 32,
+      "shuffle": true,
+      "pin_memory": true
+    },
+    "validation": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": true
+    },
+    "test": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": false
+    }
+  },
+  "training": {
+    "epochs": 500,
+    "intial_weights": {
+      "use": false,
+      "file_path": "/home/manisha/Desktop/isic-challenge-2018"
+    },
+    "loss": {
+      "l2": {
+        "cofficient": 1.0
+      }
+    },
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+        "lr": 0.0001,
+        "betas": [
+          0.7,
+          0.99
+        ],
+        "weight_decay": 0.0
+      }
+    },
+    "scheduler": {
+      "factor": 0.5,
+      "patience": 5
+    },
+    "ema": {
+      "use": true,
+      "params": {
+        "beta": 0.9999,
+        "update_after_step": 500,
+        "update_every": 1,
+        "inv_gamma": 1.0,
+        "power": 0.9
+      }
+    },
+    "loss_name": "l2"
+  },
+  "testing": {
+    "ensemble": 5,
+    "model_weigths": {
+      "overload": false,
+      "file_path": "isic-challenge-2018"
+    },
+    "result_imgs": {
+      "save": false,
+      "dir": "path/to/folder"
+    }
+  },
+  "augmentation": {
+    "p": 0.5,
+    "levels": {
+      "pixel": {
+        "p": 1.0,
+        "transforms": {
+          "CLAHE": {
+            "clip_limit": 4,
+            "tile_grid_size": [
+              3,
+              3
+            ],
+            "p": 0.05
+          },
+          "Emboss": {
+            "p": 0.05
+          },
+          "GaussNoise": {
+            "var_limit": [
+              10,
+              200
+            ],
+            "p": 0.05
+          },
+          "HueSaturationValue": {
+            "hue_shift_limit": 7,
+            "sat_shift_limit": 30,
+            "val_shift_limit": 20,
+            "p": 0.05
+          },
+          "MultiplicativeNoise": {
+            "multiplier": [
+              0.8,
+              1.25
+            ],
+            "elementwise": true,
+            "p": 0.05
+          },
+          "RGBShift": {
+            "p": 0.05
+          },
+          "RandomBrightnessContrast": {
+            "p": 0.05
+          },
+          "RandomGamma": {
+            "gamma_limit": [
+              70,
+              130
+            ],
+            "p": 0.05
+          },
+          "RandomToneCurve": {
+            "scale": 0.15,
+            "p": 0.05
+          },
+          "Sharpen": {
+            "p": 0.05
+          },
+          "Spatter": {
+            "mean": 0,
+            "std": 60,
+            "gauss_sigma": 2,
+            "cutout_threshold": 5,
+            "intensity": -3,
+            "p": 0.05
+          },
+          "UnsharpMask": {
+            "p": 0.05
+          }
+        }
+      },
+      "spacial": {
+        "p": 1,
+        "transforms": {
+          "Affine": {
+            "p": 0.05
+          },
+          "CoarseDropout": {
+            "min_holes": 1,
+            "max_holes": 5,
+            "min_height": 4,
+            "max_height": 16,
+            "min_width": 4,
+            "max_width": 16,
+            "fill_value": [
+              10,
+              20,
+              60
+            ],
+            "p": 0.05
+          },
+          "ElasticTransform": {
+            "alpha": 0.5,
+            "sigma": 1.3,
+            "alpha_affine": 20,
+            "border_mode": 2,
+            "p": 0.05
+          },
+          "HorizontalFlip": {
+            "p": 0.05
+          },
+          "VerticalFlip": {
+            "p": 0.05
+          },
+          "Flip": {
+            "p": 0.05
+          },
+          "GridDistortion": {
+            "border_mode": 4,
+            "p": 0.05
+          },
+          "PiecewiseAffine": {
+            "p": 0.05
+          },
+          "PixelDropout": {
+            "p": 0.05
+          },
+          "RandomRotate90": {
+            "p": 0.05
+          },
+          "Rotate": {
+            "border_mode": 4,
+            "p": 0.05
+          }
+        }
+      }
+    }
+  }
+}
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2024-03-27 08:13:11,782 - INFO) training.py:51 => Device is <cpu>
+2024-03-27 08:13:12,432 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-27 08:13:12,432 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-03-27 08:13:12,432 - INFO) isic2018.py:277 => Loading...
+2024-03-27 08:13:15,759 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-27 08:13:15,830 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-27 08:13:15,830 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-03-27 08:13:15,830 - INFO) isic2018.py:277 => Loading...
+2024-03-27 08:13:15,958 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-27 08:13:16,007 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-27 08:13:16,007 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-03-27 08:13:16,007 - INFO) isic2018.py:277 => Loading...
+2024-03-27 08:13:16,133 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-27 08:13:16,177 - INFO) isic2018.py:103 => ISIC 2018:
+2024-03-27 08:13:16,178 - INFO) isic2018.py:104 => ├──> Length of trainig_dataset:	   1815
+2024-03-27 08:13:16,178 - INFO) isic2018.py:105 => ├──> Length of validation_dataset: 259
+2024-03-27 08:13:16,178 - INFO) isic2018.py:106 => └──> Length of test_dataset:	   520
+2024-03-27 08:13:17,480 - INFO) training.py:87 => Number of model parameters: 321181377
+2024-03-27 08:26:17,281 - INFO) helper_funcs.py:151 => 
+>>>>>>>>>>>>>>>>>>>> Config >>>>>>>>>>>>>>>>>>>>
+{
+  "run": {
+    "device": "gpu:0",
+    "save_imgs": "saved_imgs",
+    "writer_dir": "/home/manisha/Desktop/runs/isic2018",
+    "continue_training": false
+  },
+  "model": {
+    "save_dir": "/home/manisha/Desktop/models/isic2018",
+    "name": "dsd_i01",
+    "class": "DermoSegDiff",
+    "params": {
+      "dim_x": 128,
+      "dim_g": 64,
+      "channels_x": 1,
+      "channels_g": 3,
+      "out_dim": 1,
+      "dim_x_mults": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "dim_g_mults": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "resnet_block_groups": 8
+    }
+  },
+  "diffusion": {
+    "schedule": {
+      "timesteps": 250,
+      "mode": "linear",
+      "beta_start": 0.0004,
+      "beta_end": 0.08
+    }
+  },
+  "dataset": {
+    "input_size": 128,
+    "name": "isic2018",
+    "class_name": "ISIC2018DatasetFast",
+    "data_dir": "/home/manisha/Desktop/isic-challenge-2018",
+    "number_classes": 2,
+    "img_channels": 3,
+    "msk_channels": 1,
+    "data_scale": "full"
+  },
+  "data_loader": {
+    "train": {
+      "batch_size": 32,
+      "shuffle": true,
+      "pin_memory": true
+    },
+    "validation": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": true
+    },
+    "test": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": false
+    }
+  },
+  "training": {
+    "epochs": 500,
+    "intial_weights": {
+      "use": false,
+      "file_path": "/home/manisha/Desktop/isic-challenge-2018"
+    },
+    "loss": {
+      "l2": {
+        "cofficient": 1.0
+      }
+    },
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+        "lr": 0.0001,
+        "betas": [
+          0.7,
+          0.99
+        ],
+        "weight_decay": 0.0
+      }
+    },
+    "scheduler": {
+      "factor": 0.5,
+      "patience": 5
+    },
+    "ema": {
+      "use": true,
+      "params": {
+        "beta": 0.9999,
+        "update_after_step": 500,
+        "update_every": 1,
+        "inv_gamma": 1.0,
+        "power": 0.9
+      }
+    },
+    "loss_name": "l2"
+  },
+  "testing": {
+    "ensemble": 5,
+    "model_weigths": {
+      "overload": false,
+      "file_path": "isic-challenge-2018"
+    },
+    "result_imgs": {
+      "save": false,
+      "dir": "path/to/folder"
+    }
+  },
+  "augmentation": {
+    "p": 0.5,
+    "levels": {
+      "pixel": {
+        "p": 1.0,
+        "transforms": {
+          "CLAHE": {
+            "clip_limit": 4,
+            "tile_grid_size": [
+              3,
+              3
+            ],
+            "p": 0.05
+          },
+          "Emboss": {
+            "p": 0.05
+          },
+          "GaussNoise": {
+            "var_limit": [
+              10,
+              200
+            ],
+            "p": 0.05
+          },
+          "HueSaturationValue": {
+            "hue_shift_limit": 7,
+            "sat_shift_limit": 30,
+            "val_shift_limit": 20,
+            "p": 0.05
+          },
+          "MultiplicativeNoise": {
+            "multiplier": [
+              0.8,
+              1.25
+            ],
+            "elementwise": true,
+            "p": 0.05
+          },
+          "RGBShift": {
+            "p": 0.05
+          },
+          "RandomBrightnessContrast": {
+            "p": 0.05
+          },
+          "RandomGamma": {
+            "gamma_limit": [
+              70,
+              130
+            ],
+            "p": 0.05
+          },
+          "RandomToneCurve": {
+            "scale": 0.15,
+            "p": 0.05
+          },
+          "Sharpen": {
+            "p": 0.05
+          },
+          "Spatter": {
+            "mean": 0,
+            "std": 60,
+            "gauss_sigma": 2,
+            "cutout_threshold": 5,
+            "intensity": -3,
+            "p": 0.05
+          },
+          "UnsharpMask": {
+            "p": 0.05
+          }
+        }
+      },
+      "spacial": {
+        "p": 1,
+        "transforms": {
+          "Affine": {
+            "p": 0.05
+          },
+          "CoarseDropout": {
+            "min_holes": 1,
+            "max_holes": 5,
+            "min_height": 4,
+            "max_height": 16,
+            "min_width": 4,
+            "max_width": 16,
+            "fill_value": [
+              10,
+              20,
+              60
+            ],
+            "p": 0.05
+          },
+          "ElasticTransform": {
+            "alpha": 0.5,
+            "sigma": 1.3,
+            "alpha_affine": 20,
+            "border_mode": 2,
+            "p": 0.05
+          },
+          "HorizontalFlip": {
+            "p": 0.05
+          },
+          "VerticalFlip": {
+            "p": 0.05
+          },
+          "Flip": {
+            "p": 0.05
+          },
+          "GridDistortion": {
+            "border_mode": 4,
+            "p": 0.05
+          },
+          "PiecewiseAffine": {
+            "p": 0.05
+          },
+          "PixelDropout": {
+            "p": 0.05
+          },
+          "RandomRotate90": {
+            "p": 0.05
+          },
+          "Rotate": {
+            "border_mode": 4,
+            "p": 0.05
+          }
+        }
+      }
+    }
+  }
+}
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2024-03-27 08:26:17,282 - INFO) training.py:51 => Device is <cpu>
+2024-03-27 08:26:17,287 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-27 08:26:17,287 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-03-27 08:26:17,287 - INFO) isic2018.py:277 => Loading...
+2024-03-27 08:26:17,412 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-27 08:26:17,458 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-27 08:26:17,458 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-03-27 08:26:17,458 - INFO) isic2018.py:277 => Loading...
+2024-03-27 08:26:17,583 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-27 08:26:17,634 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-27 08:26:17,634 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-03-27 08:26:17,634 - INFO) isic2018.py:277 => Loading...
+2024-03-27 08:26:17,758 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-27 08:26:17,804 - INFO) isic2018.py:103 => ISIC 2018:
+2024-03-27 08:26:17,804 - INFO) isic2018.py:104 => ├──> Length of trainig_dataset:	   1815
+2024-03-27 08:26:17,804 - INFO) isic2018.py:105 => ├──> Length of validation_dataset: 259
+2024-03-27 08:26:17,804 - INFO) isic2018.py:106 => └──> Length of test_dataset:	   520
+2024-03-27 08:26:19,106 - INFO) training.py:87 => Number of model parameters: 321181377
+2024-03-27 08:32:46,731 - INFO) helper_funcs.py:151 => 
+>>>>>>>>>>>>>>>>>>>> Config >>>>>>>>>>>>>>>>>>>>
+{
+  "run": {
+    "device": "gpu:0",
+    "save_imgs": "saved_imgs",
+    "writer_dir": "/home/manisha/Desktop/runs/isic2018",
+    "continue_training": false
+  },
+  "model": {
+    "save_dir": "/home/manisha/Desktop/models/isic2018",
+    "name": "dsd_i01",
+    "class": "DermoSegDiff",
+    "params": {
+      "dim_x": 128,
+      "dim_g": 64,
+      "channels_x": 1,
+      "channels_g": 3,
+      "out_dim": 1,
+      "dim_x_mults": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "dim_g_mults": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "resnet_block_groups": 8
+    }
+  },
+  "diffusion": {
+    "schedule": {
+      "timesteps": 250,
+      "mode": "linear",
+      "beta_start": 0.0004,
+      "beta_end": 0.08
+    }
+  },
+  "dataset": {
+    "input_size": 128,
+    "name": "isic2018",
+    "class_name": "ISIC2018DatasetFast",
+    "data_dir": "/home/manisha/Desktop/isic-challenge-2018",
+    "number_classes": 2,
+    "img_channels": 3,
+    "msk_channels": 1,
+    "data_scale": "full"
+  },
+  "data_loader": {
+    "train": {
+      "batch_size": 32,
+      "shuffle": true,
+      "pin_memory": true
+    },
+    "validation": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": true
+    },
+    "test": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": false
+    }
+  },
+  "training": {
+    "epochs": 500,
+    "intial_weights": {
+      "use": false,
+      "file_path": "/home/manisha/Desktop/isic-challenge-2018"
+    },
+    "loss": {
+      "l2": {
+        "cofficient": 1.0
+      }
+    },
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+        "lr": 0.0001,
+        "betas": [
+          0.7,
+          0.99
+        ],
+        "weight_decay": 0.0
+      }
+    },
+    "scheduler": {
+      "factor": 0.5,
+      "patience": 5
+    },
+    "ema": {
+      "use": true,
+      "params": {
+        "beta": 0.9999,
+        "update_after_step": 500,
+        "update_every": 1,
+        "inv_gamma": 1.0,
+        "power": 0.9
+      }
+    },
+    "loss_name": "l2"
+  },
+  "testing": {
+    "ensemble": 5,
+    "model_weigths": {
+      "overload": false,
+      "file_path": "isic-challenge-2018"
+    },
+    "result_imgs": {
+      "save": false,
+      "dir": "path/to/folder"
+    }
+  },
+  "augmentation": {
+    "p": 0.5,
+    "levels": {
+      "pixel": {
+        "p": 1.0,
+        "transforms": {
+          "CLAHE": {
+            "clip_limit": 4,
+            "tile_grid_size": [
+              3,
+              3
+            ],
+            "p": 0.05
+          },
+          "Emboss": {
+            "p": 0.05
+          },
+          "GaussNoise": {
+            "var_limit": [
+              10,
+              200
+            ],
+            "p": 0.05
+          },
+          "HueSaturationValue": {
+            "hue_shift_limit": 7,
+            "sat_shift_limit": 30,
+            "val_shift_limit": 20,
+            "p": 0.05
+          },
+          "MultiplicativeNoise": {
+            "multiplier": [
+              0.8,
+              1.25
+            ],
+            "elementwise": true,
+            "p": 0.05
+          },
+          "RGBShift": {
+            "p": 0.05
+          },
+          "RandomBrightnessContrast": {
+            "p": 0.05
+          },
+          "RandomGamma": {
+            "gamma_limit": [
+              70,
+              130
+            ],
+            "p": 0.05
+          },
+          "RandomToneCurve": {
+            "scale": 0.15,
+            "p": 0.05
+          },
+          "Sharpen": {
+            "p": 0.05
+          },
+          "Spatter": {
+            "mean": 0,
+            "std": 60,
+            "gauss_sigma": 2,
+            "cutout_threshold": 5,
+            "intensity": -3,
+            "p": 0.05
+          },
+          "UnsharpMask": {
+            "p": 0.05
+          }
+        }
+      },
+      "spacial": {
+        "p": 1,
+        "transforms": {
+          "Affine": {
+            "p": 0.05
+          },
+          "CoarseDropout": {
+            "min_holes": 1,
+            "max_holes": 5,
+            "min_height": 4,
+            "max_height": 16,
+            "min_width": 4,
+            "max_width": 16,
+            "fill_value": [
+              10,
+              20,
+              60
+            ],
+            "p": 0.05
+          },
+          "ElasticTransform": {
+            "alpha": 0.5,
+            "sigma": 1.3,
+            "alpha_affine": 20,
+            "border_mode": 2,
+            "p": 0.05
+          },
+          "HorizontalFlip": {
+            "p": 0.05
+          },
+          "VerticalFlip": {
+            "p": 0.05
+          },
+          "Flip": {
+            "p": 0.05
+          },
+          "GridDistortion": {
+            "border_mode": 4,
+            "p": 0.05
+          },
+          "PiecewiseAffine": {
+            "p": 0.05
+          },
+          "PixelDropout": {
+            "p": 0.05
+          },
+          "RandomRotate90": {
+            "p": 0.05
+          },
+          "Rotate": {
+            "border_mode": 4,
+            "p": 0.05
+          }
+        }
+      }
+    }
+  }
+}
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2024-03-27 08:32:46,732 - INFO) training.py:51 => Device is <cpu>
+2024-03-27 08:32:46,737 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-27 08:32:46,737 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-03-27 08:32:46,737 - INFO) isic2018.py:277 => Loading...
+2024-03-27 08:32:46,862 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-27 08:32:46,905 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-27 08:32:46,905 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-03-27 08:32:46,905 - INFO) isic2018.py:277 => Loading...
+2024-03-27 08:32:47,028 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-27 08:32:47,194 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-03-27 08:32:47,194 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-03-27 08:32:47,194 - INFO) isic2018.py:277 => Loading...
+2024-03-27 08:32:47,316 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-03-27 08:32:47,359 - INFO) isic2018.py:103 => ISIC 2018:
+2024-03-27 08:32:47,416 - INFO) isic2018.py:104 => ├──> Length of trainig_dataset:	   1815
+2024-03-27 08:32:47,416 - INFO) isic2018.py:105 => ├──> Length of validation_dataset: 259
+2024-03-27 08:32:47,416 - INFO) isic2018.py:106 => └──> Length of test_dataset:	   520
+2024-03-27 08:32:48,737 - INFO) training.py:87 => Number of model parameters: 321181377
+2024-04-09 14:04:59,119 - INFO) helper_funcs.py:151 => 
+>>>>>>>>>>>>>>>>>>>> Config >>>>>>>>>>>>>>>>>>>>
+{
+  "run": {
+    "device": "gpu:0",
+    "save_imgs": "saved_imgs",
+    "writer_dir": "/home/manisha/Desktop/runs/isic2018",
+    "continue_training": false
+  },
+  "model": {
+    "save_dir": "/home/manisha/Desktop/models/isic2018",
+    "name": "dsd_i01",
+    "class": "DermoSegDiff",
+    "params": {
+      "dim_x": 128,
+      "dim_g": 64,
+      "channels_x": 1,
+      "channels_g": 3,
+      "out_dim": 1,
+      "dim_x_mults": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "dim_g_mults": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "resnet_block_groups": 8
+    }
+  },
+  "diffusion": {
+    "schedule": {
+      "timesteps": 250,
+      "mode": "linear",
+      "beta_start": 0.0004,
+      "beta_end": 0.08
+    }
+  },
+  "dataset": {
+    "input_size": 128,
+    "name": "isic2018",
+    "class_name": "ISIC2018DatasetFast",
+    "data_dir": "/home/manisha/Desktop/isic-challenge-2018",
+    "number_classes": 2,
+    "img_channels": 3,
+    "msk_channels": 1,
+    "data_scale": "full"
+  },
+  "data_loader": {
+    "train": {
+      "batch_size": 32,
+      "shuffle": true,
+      "pin_memory": true
+    },
+    "validation": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": true
+    },
+    "test": {
+      "batch_size": 32,
+      "shuffle": false,
+      "pin_memory": false
+    }
+  },
+  "training": {
+    "epochs": 500,
+    "intial_weights": {
+      "use": false,
+      "file_path": "/home/manisha/Desktop/isic-challenge-2018"
+    },
+    "loss": {
+      "l2": {
+        "cofficient": 1.0
+      }
+    },
+    "optimizer": {
+      "name": "Adam",
+      "params": {
+        "lr": 0.0001,
+        "betas": [
+          0.7,
+          0.99
+        ],
+        "weight_decay": 0.0
+      }
+    },
+    "scheduler": {
+      "factor": 0.5,
+      "patience": 5
+    },
+    "ema": {
+      "use": true,
+      "params": {
+        "beta": 0.9999,
+        "update_after_step": 500,
+        "update_every": 1,
+        "inv_gamma": 1.0,
+        "power": 0.9
+      }
+    },
+    "loss_name": "l2"
+  },
+  "testing": {
+    "ensemble": 5,
+    "model_weigths": {
+      "overload": false,
+      "file_path": "isic-challenge-2018"
+    },
+    "result_imgs": {
+      "save": false,
+      "dir": "path/to/folder"
+    }
+  },
+  "augmentation": {
+    "p": 0.5,
+    "levels": {
+      "pixel": {
+        "p": 1.0,
+        "transforms": {
+          "CLAHE": {
+            "clip_limit": 4,
+            "tile_grid_size": [
+              3,
+              3
+            ],
+            "p": 0.05
+          },
+          "Emboss": {
+            "p": 0.05
+          },
+          "GaussNoise": {
+            "var_limit": [
+              10,
+              200
+            ],
+            "p": 0.05
+          },
+          "HueSaturationValue": {
+            "hue_shift_limit": 7,
+            "sat_shift_limit": 30,
+            "val_shift_limit": 20,
+            "p": 0.05
+          },
+          "MultiplicativeNoise": {
+            "multiplier": [
+              0.8,
+              1.25
+            ],
+            "elementwise": true,
+            "p": 0.05
+          },
+          "RGBShift": {
+            "p": 0.05
+          },
+          "RandomBrightnessContrast": {
+            "p": 0.05
+          },
+          "RandomGamma": {
+            "gamma_limit": [
+              70,
+              130
+            ],
+            "p": 0.05
+          },
+          "RandomToneCurve": {
+            "scale": 0.15,
+            "p": 0.05
+          },
+          "Sharpen": {
+            "p": 0.05
+          },
+          "Spatter": {
+            "mean": 0,
+            "std": 60,
+            "gauss_sigma": 2,
+            "cutout_threshold": 5,
+            "intensity": -3,
+            "p": 0.05
+          },
+          "UnsharpMask": {
+            "p": 0.05
+          }
+        }
+      },
+      "spacial": {
+        "p": 1,
+        "transforms": {
+          "Affine": {
+            "p": 0.05
+          },
+          "CoarseDropout": {
+            "min_holes": 1,
+            "max_holes": 5,
+            "min_height": 4,
+            "max_height": 16,
+            "min_width": 4,
+            "max_width": 16,
+            "fill_value": [
+              10,
+              20,
+              60
+            ],
+            "p": 0.05
+          },
+          "ElasticTransform": {
+            "alpha": 0.5,
+            "sigma": 1.3,
+            "alpha_affine": 20,
+            "border_mode": 2,
+            "p": 0.05
+          },
+          "HorizontalFlip": {
+            "p": 0.05
+          },
+          "VerticalFlip": {
+            "p": 0.05
+          },
+          "Flip": {
+            "p": 0.05
+          },
+          "GridDistortion": {
+            "border_mode": 4,
+            "p": 0.05
+          },
+          "PiecewiseAffine": {
+            "p": 0.05
+          },
+          "PixelDropout": {
+            "p": 0.05
+          },
+          "RandomRotate90": {
+            "p": 0.05
+          },
+          "Rotate": {
+            "border_mode": 4,
+            "p": 0.05
+          }
+        }
+      }
+    }
+  }
+}
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2024-04-09 14:04:59,147 - INFO) training.py:51 => Device is <cpu>
+2024-04-09 14:05:00,007 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-04-09 14:05:00,007 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-04-09 14:05:00,007 - INFO) isic2018.py:277 => Loading...
+2024-04-09 14:05:18,526 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-04-09 14:05:18,619 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-04-09 14:05:18,620 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-04-09 14:05:18,620 - INFO) isic2018.py:277 => Loading...
+2024-04-09 14:05:18,759 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-04-09 14:05:18,816 - INFO) isic2018.py:269 => Checking for pre-saved files...
+2024-04-09 14:05:18,816 - INFO) isic2018.py:275 => Found pre-saved files at /home/manisha/Desktop/isic-challenge-2018/np
+2024-04-09 14:05:18,816 - INFO) isic2018.py:277 => Loading...
+2024-04-09 14:05:18,943 - INFO) isic2018.py:280 => Loaded X and Y npy format
+2024-04-09 14:05:18,984 - INFO) isic2018.py:103 => ISIC 2018:
+2024-04-09 14:05:18,984 - INFO) isic2018.py:104 => ├──> Length of trainig_dataset:	   1815
+2024-04-09 14:05:18,985 - INFO) isic2018.py:105 => ├──> Length of validation_dataset: 259
+2024-04-09 14:05:18,985 - INFO) isic2018.py:106 => └──> Length of test_dataset:	   520
+2024-04-09 14:05:20,489 - INFO) training.py:87 => Number of model parameters: 321181377
